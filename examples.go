@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/pcktdmp/cef/cefevent"
+
+	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/cef.git/cefevent"
 )
 
 func main() {
@@ -12,7 +13,7 @@ func main() {
 	f["src"] = "127.0.0.1"
 	f["requestClientApplication"] = "Go-http-client/1.1"
 
-	event := cefevent.CefEvent{
+	event := cefevent.NewCefEvent(cefevent.CefEventParams{
 		Version:            0,
 		DeviceVendor:       "Cool Vendor",
 		DeviceProduct:      "Cool Product",
@@ -21,7 +22,7 @@ func main() {
 		Name:               "Something flaky happened.",
 		Severity:           "3",
 		Extensions:         f,
-	}
+	})
 
 	fmt.Println(event.String())
 

@@ -17,8 +17,8 @@ import (
 type CefEventer interface {
 	Validate() error                    // Validate if the CEF message is according to the specification.
 	String() (string, error)            // String constructs and returns a CEF message string.
-	Build() (CefEvent, error)           // Build constructs and returns a CEF message according to CefEvent.
-	Read(line string) (CefEvent, error) // Read parses a CEF message string and populates the CefEvent struct with the extracted data.
+	Build() (*CefEvent, error)           // Build constructs and returns a CEF message according to CefEvent.
+	Read(line string) (*CefEvent, error) // Read parses a CEF message string and populates the CefEvent struct with the extracted data.
 	Log() error                         // Log attempts to generate a CEF message from the current CefEvent and logs it to the standard output.
 	escapeEventData() error             // escapeEventData will try to escape all data properly in the struct according the Common Event Format.
 }
@@ -28,14 +28,47 @@ type CefEventer interface {
 // device event class ID, event name, event severity, and additional extensions.
 type CefEvent struct {
 	// defaults to 0 which is also the first CEF version.
-	Version            int               `json:"Version" yaml:"Version" toml:"Version" xml:"Version" header:"CEF Version" comment:"The version of the CEF specification that the event conforms to."`
-	DeviceVendor       string            `json:"DeviceVendor" yaml:"DeviceVendor" toml:"DeviceVendor" xml:"DeviceVendor" header:"Device Vendor" comment:"The name of the device vendor."`
-	DeviceProduct      string            `json:"DeviceProduct" yaml:"DeviceProduct" toml:"DeviceProduct" xml:"DeviceProduct" header:"Device Product" comment:"The name of the device product."`
-	DeviceVersion      string            `json:"DeviceVersion" yaml:"DeviceVersion" toml:"DeviceVersion" xml:"DeviceVersion" header:"Device Version" comment:"The version of the device product."`
-	DeviceEventClassId string            `json:"DeviceEventClassId" yaml:"DeviceEventClassId" toml:"DeviceEventClassId" xml:"DeviceEventClassId" header:"Device Event Class ID" comment:"The ID of the event class that the event conforms to."`
-	Name               string            `json:"Name" yaml:"Name" toml:"Name" xml:"Name" header:"Name" comment:"The name of the event."`
-	Severity           string            `json:"Severity" yaml:"Severity" toml:"Severity" xml:"Severity" header:"Severity" comment:"The severity of the event."`
-	Extensions         map[string]string `json:"Extensions,omitempty" yaml:"Extensions" toml:"Extensions" xml:"Extensions" header:"Extensions" comment:"Additional extensions to the CEF message."`
+	version               int
+	deviceVendor          string
+	deviceProduct         string
+	deviceVersion         string
+	deviceEventClassId    string
+	name                  string
+	severity              string
+	extensions            map[string]string
+	extensionsKeySortFunc func(keys []string)
+}
+
+type CefEventParams struct {
+	Version               int
+	DeviceVendor          string
+	DeviceProduct         string
+	DeviceVersion         string
+	DeviceEventClassId    string
+	Name                  string
+	Severity              string
+	Extensions            map[string]string
+	ExtensionsKeySortFunc func(keys []string)
+}
+
+func NewCefEvent(param CefEventParams) *CefEvent {
+	event := CefEvent{
+		version:               param.Version,
+		deviceVendor:          param.DeviceVendor,
+		deviceProduct:         param.DeviceProduct,
+		deviceVersion:         param.DeviceVersion,
+		deviceEventClassId:    param.DeviceEventClassId,
+		name:                  param.Name,
+		severity:              param.Severity,
+		extensions:            param.Extensions,
+		extensionsKeySortFunc: param.ExtensionsKeySortFunc,
+	}
+
+	if event.extensionsKeySortFunc == nil {
+		event.extensionsKeySortFunc = sort.Strings
+	}
+
+	return &event
 }
 
 // cefEscapeField escapes special characters in a given string that are used in CEF (Common Event Format) fields.
@@ -100,24 +133,24 @@ func cefEscapeExtension(field string) string {
 // - An error if there is any issue during the escaping process; otherwise, returns nil.
 func (event *CefEvent) escapeEventData() error {
 
-	event.DeviceVendor = cefEscapeField(event.DeviceVendor)
-	event.DeviceProduct = cefEscapeField(event.DeviceProduct)
-	event.DeviceVersion = cefEscapeField(event.DeviceVersion)
-	event.DeviceEventClassId = cefEscapeField(event.DeviceEventClassId)
-	event.Name = cefEscapeField(event.Name)
-	event.Severity = cefEscapeField(event.Severity)
+	event.deviceVendor = cefEscapeField(event.deviceVendor)
+	event.deviceProduct = cefEscapeField(event.deviceProduct)
+	event.deviceVersion = cefEscapeField(event.deviceVersion)
+	event.deviceEventClassId = cefEscapeField(event.deviceEventClassId)
+	event.name = cefEscapeField(event.name)
+	event.severity = cefEscapeField(event.severity)
 
 	// TODO: memory usage improvement
 	// simple method to make sure escaped strings are not duped in the map keys
 	escapedExtensions := make(map[string]string)
 
-	if len(event.Extensions) > 0 {
-		for k, v := range event.Extensions {
+	if len(event.extensions) > 0 {
+		for k, v := range event.extensions {
 			escapedExtensions[cefEscapeExtension(k)] = cefEscapeExtension(v)
 		}
 	}
 
-	event.Extensions = escapedExtensions
+	event.extensions = escapedExtensions
 
 	return nil
 }
@@ -138,13 +171,13 @@ func (event *CefEvent) Validate() error {
 	// define an array with all the mandatory
 	// CEF fields.
 	mandatoryFields := []string{
-		"Version",
-		"DeviceVendor",
-		"DeviceProduct",
-		"DeviceVersion",
-		"DeviceEventClassId",
-		"Name",
-		"Severity",
+		"version",
+		"deviceVendor",
+		"deviceProduct",
+		"deviceVersion",
+		"deviceEventClassId",
+		"name",
+		"severity",
 	}
 
 	// loop over all mandatory fields
@@ -192,17 +225,17 @@ func (event *CefEvent) Log() error {
 // Returns:
 // - A CefEvent type representing the CEF message.
 // - An error if any mandatory field is missing or if there are other issues during generation.
-func (event *CefEvent) Build() (CefEvent, error) {
+func (event *CefEvent) Build() (*CefEvent, error) {
 
 	if event.Validate() != nil {
-		return CefEvent{}, errors.New("not all mandatory CEF fields are set")
+		return nil, errors.New("not all mandatory CEF fields are set")
 	}
 
 	if event.escapeEventData() != nil {
-		return CefEvent{}, errors.New("unable to escape CEF event data")
+		return nil, errors.New("unable to escape CEF event data")
 	}
 
-	return *event, nil
+	return event, nil
 }
 
 // String constructs and returns a CEF (Common Event Format) message string if all the mandatory
@@ -218,7 +251,7 @@ func (event *CefEvent) Build() (CefEvent, error) {
 // - An error if any mandatory field is missing or if there are other issues during generation.
 func (event *CefEvent) String() (string, error) {
 
-	if CefEventer.Validate(event) != nil {
+	if event.Validate() != nil {
 		return "", errors.New("not all mandatory CEF fields are set")
 	}
 
@@ -229,17 +262,20 @@ func (event *CefEvent) String() (string, error) {
 	var p strings.Builder
 
 	var sortedExtensions []string
-	for k := range event.Extensions {
+	for k := range event.extensions {
 		sortedExtensions = append(sortedExtensions, k)
 	}
-	sort.Strings(sortedExtensions)
+
+	if event.extensionsKeySortFunc != nil {
+		event.extensionsKeySortFunc(sortedExtensions)
+	}
 
 	// construct the extension string according to the CEF format
 	for _, k := range sortedExtensions {
 		p.WriteString(fmt.Sprintf(
 			"%s=%s ",
 			k,
-			event.Extensions[k]),
+			event.extensions[k]),
 		)
 	}
 
@@ -249,10 +285,10 @@ func (event *CefEvent) String() (string, error) {
 
 	eventCef := fmt.Sprintf(
 		"CEF:%v|%v|%v|%v|%v|%v|%v|%v",
-		event.Version, event.DeviceVendor,
-		event.DeviceProduct, event.DeviceVersion,
-		event.DeviceEventClassId, event.Name,
-		event.Severity, extensionString,
+		event.version, event.deviceVendor,
+		event.deviceProduct, event.deviceVersion,
+		event.deviceEventClassId, event.name,
+		event.severity, extensionString,
 	)
 
 	return eventCef, nil
@@ -273,17 +309,17 @@ func (event *CefEvent) String() (string, error) {
 // Returns:
 // - A CefEvent struct populated with the parsed CEF message data.
 // - An error if the CEF message is improperly formatted or if any mandatory field is missing.
-func (event *CefEvent) Read(eventLine string) (CefEvent, error) {
+func (event *CefEvent) Read(eventLine string) (*CefEvent, error) {
 	if strings.HasPrefix(eventLine, "CEF:") {
 		eventSlashed := strings.Split(strings.TrimPrefix(eventLine, "CEF:"), "|")
 
 		// convert CEF version to int
 		cefVersion, err := strconv.Atoi(eventSlashed[0])
 		if err != nil {
-			return CefEvent{}, err
+			return nil, err
 		}
 
-		event.Version = cefVersion
+		event.version = cefVersion
 		parsedExtensions := make(map[string]string)
 
 		// each extension k,v is separated by a " ".
@@ -298,25 +334,25 @@ func (event *CefEvent) Read(eventLine string) (CefEvent, error) {
 			}
 		}
 
-		event.DeviceVendor = eventSlashed[1]
-		event.DeviceProduct = eventSlashed[2]
-		event.DeviceVersion = eventSlashed[3]
-		event.DeviceEventClassId = eventSlashed[4]
-		event.Name = eventSlashed[5]
-		event.Severity = eventSlashed[6]
-		event.Extensions = parsedExtensions
+		event.deviceVendor = eventSlashed[1]
+		event.deviceProduct = eventSlashed[2]
+		event.deviceVersion = eventSlashed[3]
+		event.deviceEventClassId = eventSlashed[4]
+		event.name = eventSlashed[5]
+		event.severity = eventSlashed[6]
+		event.extensions = parsedExtensions
 
 		if event.escapeEventData() != nil {
-			return CefEvent{}, errors.New("could not escape CEF event data")
+			return nil, errors.New("could not escape CEF event data")
 		}
 
-		if CefEventer.Validate(event) != nil {
-			return CefEvent{}, errors.New("not all mandatory CEF fields are set")
+		if event.Validate() != nil {
+			return nil, errors.New("not all mandatory CEF fields are set")
 		}
 
-		return *event, nil
+		return event, nil
 	}
-	return CefEvent{}, errors.New("not a valid CEF message")
+	return nil, errors.New("not a valid CEF message")
 }
 
 // ToJSON converts the CefEvent instance to a JSON string.
@@ -328,13 +364,35 @@ func (event *CefEvent) Read(eventLine string) (CefEvent, error) {
 // - A JSON string representation of the CefEvent if successful.
 // - An error if the CefEvent is not valid or if there is an error during the JSON marshaling process.
 func (event *CefEvent) ToJSON() (string, error) {
+
 	// Validate the event before converting to JSON
 	if err := event.Validate(); err != nil {
 		return "", err
 	}
 
+	output := struct {
+		// defaults to 0 which is also the first CEF version.
+		Version            int               `json:"Version" yaml:"Version" toml:"Version" xml:"Version" header:"CEF Version" comment:"The version of the CEF specification that the event conforms to."`
+		DeviceVendor       string            `json:"DeviceVendor" yaml:"DeviceVendor" toml:"DeviceVendor" xml:"DeviceVendor" header:"Device Vendor" comment:"The name of the device vendor."`
+		DeviceProduct      string            `json:"DeviceProduct" yaml:"DeviceProduct" toml:"DeviceProduct" xml:"DeviceProduct" header:"Device Product" comment:"The name of the device product."`
+		DeviceVersion      string            `json:"DeviceVersion" yaml:"DeviceVersion" toml:"DeviceVersion" xml:"DeviceVersion" header:"Device Version" comment:"The version of the device product."`
+		DeviceEventClassId string            `json:"DeviceEventClassId" yaml:"DeviceEventClassId" toml:"DeviceEventClassId" xml:"DeviceEventClassId" header:"Device Event Class ID" comment:"The ID of the event class that the event conforms to."`
+		Name               string            `json:"Name" yaml:"Name" toml:"Name" xml:"Name" header:"Name" comment:"The name of the event."`
+		Severity           string            `json:"Severity" yaml:"Severity" toml:"Severity" xml:"Severity" header:"Severity" comment:"The severity of the event."`
+		Extensions         map[string]string `json:"Extensions,omitempty" yaml:"Extensions" toml:"Extensions" xml:"Extensions" header:"Extensions" comment:"Additional extensions to the CEF message."`
+	}{
+		Version:            event.version,
+		DeviceVendor:       event.deviceVendor,
+		DeviceProduct:      event.deviceProduct,
+		DeviceVersion:      event.deviceVersion,
+		DeviceEventClassId: event.deviceEventClassId,
+		Name:               event.name,
+		Severity:           event.severity,
+		Extensions:         event.extensions,
+	}
+
 	// Attempt to convert the event to JSON
-	jsonData, err := json.Marshal(event)
+	jsonData, err := json.Marshal(output)
 	if err != nil {
 		return "", err
 	}

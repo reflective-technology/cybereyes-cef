@@ -16,7 +16,7 @@ needs to handle the [known](https://www.microfocus.com/documentation/arcsight/ar
 ### Install the package
 
 ```bash
-$ go get github.com/pcktdmp/cef/cefevent
+$ go get gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/cef.git
 ```
 
 ### examples.go
@@ -26,7 +26,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/pcktdmp/cef/cefevent"
+
+	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/cef.git/cefevent"
 )
 
 func main() {
@@ -36,7 +37,7 @@ func main() {
 	f["src"] = "127.0.0.1"
 	f["requestClientApplication"] = "Go-http-client/1.1"
 
-	event := cefevent.CefEvent{
+	event := cefevent.NewCefEvent(cefevent.CefEventParams{
 		Version:            0,
 		DeviceVendor:       "Cool Vendor",
 		DeviceProduct:      "Cool Product",
@@ -45,7 +46,7 @@ func main() {
 		Name:               "Something flaky happened.",
 		Severity:           "3",
 		Extensions:         f,
-	}
+	})
 
 	fmt.Println(event.String())
 
@@ -54,7 +55,7 @@ func main() {
 
 	// or if you want to do error handling when
 	// sending the log
-	_, err := event.Log()
+	err := event.Log()
 
 	if err != nil {
 		fmt.Println("Need to handle this.")
