@@ -34,21 +34,26 @@ func TestCefEventExpected(t *testing.T) {
 
 }
 
-func TestCefEventParsedAndGenerated(t *testing.T) {
+func TestCefEventParsed(t *testing.T) {
 
 	newEvent := cefevent.NewCefEvent(cefevent.CefEventParams{})
-	want := eventLine
-	parsedEvent, err := newEvent.Read(eventLine)
-
+	want := cefevent.NewCefEvent(defaultParams)
+	got, err := newEvent.Read(eventLine)
 	if err != nil {
 		t.Errorf("read failed: %v", err)
 	}
 
-	got, err := parsedEvent.String()
-
-	if err != nil {
-		t.Errorf("string failed: %v", err)
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf("Parse() = %v, want %v", got, want)
 	}
+}
+
+func TestCefEventParsedAndGenerated(t *testing.T) {
+
+	newEvent := cefevent.NewCefEvent(cefevent.CefEventParams{})
+	want := eventLine
+	parsedEvent, _ := newEvent.Read(eventLine)
+	got, _ := parsedEvent.String()
 
 	if !reflect.DeepEqual(want, got) {
 		t.Errorf("Parse() = %v, want %v", got, want)

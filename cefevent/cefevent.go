@@ -7,7 +7,6 @@ import (
 	"log"
 	"os"
 	"reflect"
-	"sort"
 	"strconv"
 	"strings"
 )
@@ -15,12 +14,12 @@ import (
 // CefEventer defines the interface for handling Common Event Format (CEF) events.
 // It includes methods to create (String()), Validate(), Read(), and Log() CEF events.
 type CefEventer interface {
-	Validate() error                    // Validate if the CEF message is according to the specification.
-	String() (string, error)            // String constructs and returns a CEF message string.
+	Validate() error                     // Validate if the CEF message is according to the specification.
+	String() (string, error)             // String constructs and returns a CEF message string.
 	Build() (*CefEvent, error)           // Build constructs and returns a CEF message according to CefEvent.
 	Read(line string) (*CefEvent, error) // Read parses a CEF message string and populates the CefEvent struct with the extracted data.
-	Log() error                         // Log attempts to generate a CEF message from the current CefEvent and logs it to the standard output.
-	escapeEventData() error             // escapeEventData will try to escape all data properly in the struct according the Common Event Format.
+	Log() error                          // Log attempts to generate a CEF message from the current CefEvent and logs it to the standard output.
+	escapeEventData() error              // escapeEventData will try to escape all data properly in the struct according the Common Event Format.
 }
 
 // CefEvent represents a Common Event Format (CEF) event.
@@ -53,19 +52,18 @@ type CefEventParams struct {
 
 func NewCefEvent(param CefEventParams) *CefEvent {
 	event := CefEvent{
-		version:               param.Version,
-		deviceVendor:          param.DeviceVendor,
-		deviceProduct:         param.DeviceProduct,
-		deviceVersion:         param.DeviceVersion,
-		deviceEventClassId:    param.DeviceEventClassId,
-		name:                  param.Name,
-		severity:              param.Severity,
-		extensions:            param.Extensions,
-		extensionsKeySortFunc: param.ExtensionsKeySortFunc,
+		version:            param.Version,
+		deviceVendor:       param.DeviceVendor,
+		deviceProduct:      param.DeviceProduct,
+		deviceVersion:      param.DeviceVersion,
+		deviceEventClassId: param.DeviceEventClassId,
+		name:               param.Name,
+		severity:           param.Severity,
+		extensions:         param.Extensions,
 	}
 
-	if event.extensionsKeySortFunc == nil {
-		event.extensionsKeySortFunc = sort.Strings
+	if param.ExtensionsKeySortFunc != nil {
+		event.extensionsKeySortFunc = param.ExtensionsKeySortFunc
 	}
 
 	return &event
