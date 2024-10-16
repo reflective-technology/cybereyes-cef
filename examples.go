@@ -27,7 +27,9 @@ func main() {
 	fmt.Println(event.String())
 
 	// send a CEF event as log message to stdout
-	event.Log()
+	if err := event.Log(); err != nil {
+		fmt.Println("Need to handle this.")
+	}
 
 	// or if you want to do error handling when
 	// sending the log
@@ -40,7 +42,9 @@ func main() {
 	// if you want read a CEF event from a line
 	eventLine := "CEF:0|Cool Vendor|Cool Product|1.0|COOL_THING|Something cool happened.|Unknown|src=127.0.0.1"
 	newEvent := cefevent.CefEvent{}
-	newEvent.Read(eventLine)
+	if _, err := newEvent.Read(eventLine); err != nil {
+		fmt.Println("Need to handle this.")
+	}
 	eventString, err := newEvent.String()
 	if err != nil {
 		fmt.Println("Need to handle this.")
