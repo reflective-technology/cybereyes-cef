@@ -11,6 +11,16 @@ import (
 	"golang.org/x/text/language"
 )
 
+const (
+	AlertSeverityInfo     AlertSeverity = "info"
+	AlertSeverityLow      AlertSeverity = "low"
+	AlertSeverityMedium   AlertSeverity = "medium"
+	AlertSeverityHigh     AlertSeverity = "high"
+	AlertSeverityCritical AlertSeverity = "critical"
+)
+
+type AlertSeverity string
+
 type AlertMetaField struct {
 	// rule_id
 	RuleID string
@@ -25,7 +35,7 @@ type AlertMetaField struct {
 	Description string
 
 	// severity
-	Severity *string
+	Severity AlertSeverity
 
 	// severity_num
 	SeverityNum *int
@@ -38,24 +48,26 @@ type Alert struct {
 	Meta AlertMetaField
 
 	// will be translated into extensions
+	generalFields map[string]string
+}
+
+type AlertParam struct {
+	Meta          AlertMetaField
 	GeneralFields map[string]string
 }
 
-func (alert *Alert) WithSeverity(severity string) *Alert {
-	alert.Meta.Severity = &severity
-	return alert
+func NewAlert(param AlertParam) *Alert {
+	alert := Alert{
+		Meta:          param.Meta,
+		generalFields: param.GeneralFields,
+	}
+
+	return &alert
 }
 
 func (alert *Alert) WithSeverityNum(severityNum int) *Alert {
 	alert.Meta.SeverityNum = &severityNum
 	return alert
-}
-
-type VendorConfig struct {
-	VendorName     string
-	ProductName    string
-	ProductVersion string
-	Abbreviation   string
 }
 
 type ToCefParam struct {
@@ -80,7 +92,7 @@ func (alert *Alert) ToCef(param ToCefParam) (string, error) {
 		extensions["cs1"] = alert.Meta.Name
 
 		extensions["cs2Label"] = "severity"
-		extensions["cs2"] = *alert.Meta.Severity
+		extensions["cs2"] = string(alert.Meta.Severity)
 
 		extensions["cs3Label"] = "summary"
 		extensions["cs3"] = alert.Meta.AlertSubject
@@ -89,16 +101,16 @@ func (alert *Alert) ToCef(param ToCefParam) (string, error) {
 		extensions["cs4"] = alert.Meta.Description
 
 		// add custom fields from GeneralFields
-		if status, ok := alert.GeneralFields["status"]; ok {
+		if status, ok := alert.generalFields["status"]; ok {
 			extensions["cs5Label"] = "status"
 			extensions["cs5"] = status
 		}
-		if uriQuery, ok := alert.GeneralFields["uri_query"]; ok {
+		if uriQuery, ok := alert.generalFields["uri_query"]; ok {
 			extensions["cs6Label"] = "uri_query"
 			extensions["cs6"] = uriQuery
 		}
 
-		for k, v := range alert.GeneralFields {
+		for k, v := range alert.generalFields {
 			// skip status and uri_query because they are already included in custom fields
 			if k == "status" || k == "uri_query" {
 				continue
@@ -175,11 +187,11 @@ func ResolveCEFSeverity(meta AlertMetaField) (string, error) {
 		return fmt.Sprintf("%d", point), nil
 	}
 
-	if meta.Severity == nil {
+	if meta.Severity == "" {
 		return "", errors.New("both Severity and SeverityNum are not set")
 	}
 
-	point, err := DefaultSeverityPoint(*meta.Severity)
+	point, err := DefaultSeverityPoint(string(meta.Severity))
 	if err != nil {
 		return "", err
 	}
