@@ -11,6 +11,13 @@ import (
 	"strings"
 )
 
+type CefVersion int
+
+const (
+	CefVersion0 CefVersion = iota
+	CefVersion1
+)
+
 // CefEventer defines the interface for handling Common Event Format (CEF) events.
 // It includes methods to create (String()), Validate(), Read(), and Log() CEF events.
 type CefEventer interface {
@@ -27,7 +34,7 @@ type CefEventer interface {
 // device event class ID, event name, event severity, and additional extensions.
 type CefEvent struct {
 	// defaults to 0 which is also the first CEF version.
-	version               int
+	version               CefVersion
 	deviceVendor          string
 	deviceProduct         string
 	deviceVersion         string
@@ -39,7 +46,7 @@ type CefEvent struct {
 }
 
 type CefEventParams struct {
-	Version               int
+	Version               CefVersion
 	DeviceVendor          string
 	DeviceProduct         string
 	DeviceVersion         string
@@ -317,7 +324,7 @@ func (event *CefEvent) Read(eventLine string) (*CefEvent, error) {
 			return nil, err
 		}
 
-		event.version = cefVersion
+		event.version = CefVersion(cefVersion)
 		parsedExtensions := make(map[string]string)
 
 		// each extension k,v is separated by a " ".
@@ -379,7 +386,7 @@ func (event *CefEvent) ToJSON() (string, error) {
 		Severity           string            `json:"Severity" yaml:"Severity" toml:"Severity" xml:"Severity" header:"Severity" comment:"The severity of the event."`
 		Extensions         map[string]string `json:"Extensions,omitempty" yaml:"Extensions" toml:"Extensions" xml:"Extensions" header:"Extensions" comment:"Additional extensions to the CEF message."`
 	}{
-		Version:            event.version,
+		Version:            int(event.version),
 		DeviceVendor:       event.deviceVendor,
 		DeviceProduct:      event.deviceProduct,
 		DeviceVersion:      event.deviceVersion,

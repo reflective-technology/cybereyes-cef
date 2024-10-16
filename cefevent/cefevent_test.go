@@ -8,7 +8,7 @@ import (
 )
 
 var defaultParams = cefevent.CefEventParams{
-	Version:               0,
+	Version:               cefevent.CefVersion0,
 	DeviceVendor:          "Cool Vendor",
 	DeviceProduct:         "Cool Product",
 	DeviceVersion:         "1.0",
