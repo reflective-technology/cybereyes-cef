@@ -85,17 +85,7 @@ func (alert *RawAlert) ToCef(param ToCefParam) (string, error) {
 }
 
 func (alert *RawAlert) ToSyslogRFC3164WithCef(param ToSyslogRFC3164WithCefParam) (string, error) {
-
-	msg, err := alert.ToCef(ToCefParam{
-		VendorConfig: param.VendorConfig,
-		Hostname:     param.Hostname,
-	})
-	if err != nil {
-		return "", err
-	}
-
-	result := fmt.Sprintf("<%d>%s %s %s: %s", param.Priority, param.Timestamp.Format(time.Stamp), param.Hostname, param.VendorConfig.ProductName, msg)
-	return result, nil
+	return SyslogRFC3164WithCef(alert, param)
 }
 
 // Convert the field name to camel case and prefix with vendor abbreviation
