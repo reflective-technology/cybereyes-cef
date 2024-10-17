@@ -1,88 +1,94 @@
-# Common Event Format in Go
-Go Package for ArcSight's Common Event Format
+# Events
 
-![Build Workflow](https://github.com/pcktdmp/cef/workflows/Build/badge.svg)
-![Test Workflow](https://github.com/pcktdmp/cef/workflows/Test/badge.svg)
+This repository contains a collection of event types ,and all the events implemente a method that can convert to a CEF formatted string.
 
-# Motivation
+## Usage
 
-Learning Go, help people who need to process CEF events in Golang.
-
-## TL;DR
-
-`cefevent` is a [loose implementation](#Not-implemented) of the Common Event Format, the one who processes events
-needs to handle the [known](https://www.microfocus.com/documentation/arcsight/arcsight-smartconnectors-8.4/pdfdoc/cef-implementation-standard/cef-implementation-standard.pdf) field limits.
-
-### Install the package
-
-```bash
-$ go get gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git
-```
-
-### examples.go
+To use the events in your project, you can install the package and then import the package into your project.
 
 ```go
 package main
 
 import (
 	"fmt"
+	"time"
 
-	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/cefevent"
+	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/alert"
+	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/helper"
+	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/types"
 )
 
 func main() {
 
-	// create CEF event
-	f := make(map[string]string)
-	f["src"] = "127.0.0.1"
-	f["requestClientApplication"] = "Go-http-client/1.1"
+	webAlert := alert.WebAlert{
+		AlertMetaField: alert.AlertMetaField{
+			ID:           "a1b2c3d4-e5f6-7890-abcd-1234567890ab",
+			RuleID:       "RULE-12345",
+			Name:         "Suspicious Network Activity Detected",
+			AlertSubject: "Potential Data Exfiltration Attempt",
+			Description:  "Multiple large outbound data transfers detected from internal IP to unknown external destination.",
+			Severity:     alert.AlertSeverityCritical,
+		},
+		WebFields: types.Web{
+			Src:           helper.String("192.168.1.1"),
+			SrcPort:       helper.String("35098"),
+			Dest:          helper.String("192.168.1.2"),
+			DestPort:      helper.String("80"),
+			HttpMethod:    helper.String("POST"),
+			HttpUserAgent: helper.String("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"),
+			Status:        helper.String("200"),
+			HttpReferrer:  helper.String("http://example.com"),
+			UriQuery:      helper.String("param1=value1&param2=value2"),
+			UriPath:       helper.String("/path/to/resource"),
+			BytesIn:       helper.String("4096"),
+			BytesOut:      helper.String("8192"),
+			Cookie:        helper.String("testcookie=testvalue"),
+			Fingerprint:   helper.String("098f6bcd4621d373cade4e832627b4f6"),
+		},
+	}
 
-	event := cefevent.NewCefEvent(cefevent.CefEventParams{
-		Version:            0,
-		DeviceVendor:       "Cool Vendor",
-		DeviceProduct:      "Cool Product",
-		DeviceVersion:      "1.0",
-		DeviceEventClassId: "FLAKY_EVENT",
-		Name:               "Something flaky happened.",
-		Severity:           "3",
-		Extensions:         f,
+	syslog, err := webAlert.ToSyslogRFC3164WithCef(alert.ToSyslogRFC3164WithCefParam{
+		VendorConfig: alert.VendorReflective,
+		Hostname:     "web-security-01.zuso.arpa",
+		Timestamp:    time.Now().UTC(),
+		Priority:     14 * 8,
 	})
-
-	fmt.Println(event.String())
-
-	// send a CEF event as log message to stdout
-	event.Log()
-
-	// or if you want to do error handling when
-	// sending the log
-	err := event.Log()
-
 	if err != nil {
-		fmt.Println("Need to handle this.")
+		panic(err)
 	}
 
-	// if you want read a CEF event from a line
-	eventLine := "CEF:0|Cool Vendor|Cool Product|1.0|COOL_THING|Something cool happened.|Unknown|src=127.0.0.1"
-	newEvent := cefevent.CefEvent{}
-	newEvent.Read(eventLine)
-	eventString, err := newEvent.String()
-	if err != nil {
-		fmt.Println("Need to handle this.")
-	}
-	fmt.Println(eventString)
-
+	fmt.Println(syslog) // <112>Oct 17 20:21:46 web-security-01.zuso.arpa CyberEyes: CEF:0|Reflective|CyberEyes|3|RULE-12345|Suspicious Network Activity Detected|10|dpt=80 dst=192.168.1.2 dvchost=web-security-01.zuso.arpa eventId=a1b2c3d4-e5f6-7890-abcd-1234567890ab in=4096 out=8192 request=/path/to/resource requestClientApplication=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 requestContext=http://example.com requestCookies=testcookie\=testvalue requestMethod=POST rt=-62135596800000 spt=35098 src=192.168.1.1 cs1=Suspicious Network Activity Detected cs1Label=alertname cs2=critical cs2Label=severity cs3=Potential Data Exfiltration Attempt cs3Label=summary cs4=Multiple large outbound data transfers detected from internal IP to unknown external destination. cs4Label=description cs5=200 cs5Label=status cs6=param1\=value1&param2\=value2 cs6Label=uri_query CEFingerprint=098f6bcd4621d373cade4e832627b4f6
 }
 
 ```
-### Example output
+
+
+
+## Add new event type
+
+
+To add new event type, you need to add the json schema to the `json_schemas` directory.
+
+After that, you need to run the following command to generate the event type.
 
 ```bash
-$ go run examples.go
-CEF:0|Cool Vendor|Cool Product|1.0|FLAKY_EVENT|Something flaky happened.|3|requestClientApplication=Go-http-client/1.1 src=127.0.0.1
-2020/03/12 21:28:19 CEF:0|Cool Vendor|Cool Product|1.0|FLAKY_EVENT|Something flaky happened.|3|requestClientApplication=Go-http-client/1.1 src=127.0.0.1
-2020/03/12 21:28:19 CEF:0|Cool Vendor|Cool Product|1.0|FLAKY_EVENT|Something flaky happened.|3|requestClientApplication=Go-http-client/1.1 src=127.0.0.1
+make codegen
 ```
 
-## Not implemented
+and to generate the corresponding alert type, you need to add the event type to the list in `alert/codegen/main.go`
 
-* Field limits according to format standard for CEF fields
+like this:
+```
+var alertTypes = []any{
+	types.AuditdLinux{},
+	types.Firewall{},
+	types.Ips{},
+	types.SysmonWindows{},
+	types.WebApplicationFirewall{},
+	types.Web{},
+	types.WindowsEventsApplication{},
+	types.WindowsEventsSecurity{},
+}
+```
+
+and run `make codegen` again.
