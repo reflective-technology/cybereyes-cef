@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/cef.git/cefevent"
+	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/cefevent"
 )
 
 func main() {

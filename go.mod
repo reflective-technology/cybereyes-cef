@@ -1,4 +1,4 @@
-module gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/cef.git
+module gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git
 
 go 1.22
 

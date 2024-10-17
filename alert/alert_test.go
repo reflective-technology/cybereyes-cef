@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/cef.git/cefevent/alert"
+	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/alert"
 )
 
 var testAlert = alert.NewAlert(alert.AlertParam{

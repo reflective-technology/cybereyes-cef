@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/cef.git/cefevent"
+	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/cefevent"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
