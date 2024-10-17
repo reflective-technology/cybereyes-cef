@@ -42,6 +42,6 @@ lint-test:
   - ".go-cache"
   - ".normal-not-cron"
   script:
-  - golangci-lint run . --timeout 5m
+  - golangci-lint run . --timeout 5m --skip-files README.md
   tags:
   - container
