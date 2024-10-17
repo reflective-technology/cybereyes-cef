@@ -2,11 +2,9 @@
 
 package types
 
-import "time"
-
 type WindowsEventsApplication struct {
 	// Timestamp corresponds to the JSON schema field "@timestamp".
-	Timestamp *time.Time `json:"@timestamp,omitempty" yaml:"@timestamp,omitempty" mapstructure:"@timestamp,omitempty"`
+	Timestamp *string `json:"@timestamp,omitempty" yaml:"@timestamp,omitempty" mapstructure:"@timestamp,omitempty"`
 
 	// Version corresponds to the JSON schema field "@version".
 	Version *string `json:"@version,omitempty" yaml:"@version,omitempty" mapstructure:"@version,omitempty"`
