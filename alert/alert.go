@@ -11,53 +11,20 @@ import (
 	"golang.org/x/text/language"
 )
 
-const (
-	AlertSeverityInfo     AlertSeverity = "info"
-	AlertSeverityLow      AlertSeverity = "low"
-	AlertSeverityMedium   AlertSeverity = "medium"
-	AlertSeverityHigh     AlertSeverity = "high"
-	AlertSeverityCritical AlertSeverity = "critical"
-)
-
-type AlertSeverity string
-
-type AlertMetaField struct {
-	// rule_id
-	RuleID string
-
-	// name
-	Name string
-
-	// alert_subject
-	AlertSubject string
-
-	// alert_desc
-	Description string
-
-	// severity
-	Severity AlertSeverity
-
-	// severity_num
-	SeverityNum *int
-
-	// @timestamp
-	Timestamp time.Time
-}
-
-type Alert struct {
+type RawAlert struct {
 	Meta AlertMetaField
 
 	// will be translated into extensions
 	generalFields map[string]string
 }
 
-type AlertParam struct {
+type RawAlertParam struct {
 	Meta          AlertMetaField
 	GeneralFields map[string]string
 }
 
-func NewAlert(param AlertParam) *Alert {
-	alert := Alert{
+func NewRawAlert(param RawAlertParam) *RawAlert {
+	alert := RawAlert{
 		Meta:          param.Meta,
 		generalFields: param.GeneralFields,
 	}
@@ -65,14 +32,9 @@ func NewAlert(param AlertParam) *Alert {
 	return &alert
 }
 
-func (alert *Alert) WithSeverityNum(severityNum int) *Alert {
+func (alert *RawAlert) WithSeverityNum(severityNum int) *RawAlert {
 	alert.Meta.SeverityNum = &severityNum
 	return alert
-}
-
-type ToCefParam struct {
-	VendorConfig VendorConfig
-	Hostname     string
 }
 
 // ToCEF converts the alert to CEF format
@@ -80,7 +42,7 @@ type ToCefParam struct {
 // 1. cef standard fields
 // 2. custom labels and values
 // 3. user defined fields
-func (alert *Alert) ToCef(param ToCefParam) (string, error) {
+func (alert *RawAlert) ToCef(param ToCefParam) (string, error) {
 	extensions := make(map[string]string)
 	{
 		// add standard fields from alert meta
@@ -152,6 +114,20 @@ func (alert *Alert) ToCef(param ToCefParam) (string, error) {
 	return event.String()
 }
 
+func (alert *RawAlert) ToSyslogRFC3164WithCef(param ToSyslogRFC3164WithCefParam) (string, error) {
+
+	msg, err := alert.ToCef(ToCefParam{
+		VendorConfig: param.VendorConfig,
+		Hostname:     param.Hostname,
+	})
+	if err != nil {
+		return "", err
+	}
+
+	result := fmt.Sprintf("<%d>%s %s %s: %s", param.Priority, param.Timestamp.Format(time.Stamp), param.Hostname, param.VendorConfig.ProductName, msg)
+	return result, nil
+}
+
 // Convert the field name to camel case and prefix with vendor abbreviation
 func UserDefinedFieldName(name string, vendorAbbreviation string) (string, error) {
 	if name == "" {
@@ -216,25 +192,4 @@ func DefaultSeverityPoint(severity string) (int, error) {
 	default:
 		return 0, fmt.Errorf("unknown severity: %s", severity)
 	}
-}
-
-type ToSyslogRFC3164WithCefParam struct {
-	VendorConfig VendorConfig
-	Hostname     string
-	Timestamp    time.Time
-	Priority     uint8
-}
-
-func (alert *Alert) ToSyslogRFC3164WithCef(param ToSyslogRFC3164WithCefParam) (string, error) {
-
-	msg, err := alert.ToCef(ToCefParam{
-		VendorConfig: param.VendorConfig,
-		Hostname:     param.Hostname,
-	})
-	if err != nil {
-		return "", err
-	}
-
-	result := fmt.Sprintf("<%d>%s %s %s: %s", param.Priority, param.Timestamp.Format(time.Stamp), param.Hostname, param.VendorConfig.ProductName, msg)
-	return result, nil
 }

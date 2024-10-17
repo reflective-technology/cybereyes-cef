@@ -7,7 +7,7 @@ import (
 	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/alert"
 )
 
-var testAlert = alert.NewAlert(alert.AlertParam{
+var testRawAlert = alert.NewRawAlert(alert.RawAlertParam{
 	Meta: alert.AlertMetaField{
 		RuleID:       "rule-id-xxx",
 		Name:         "Test Alert",
@@ -32,7 +32,9 @@ var testAlert = alert.NewAlert(alert.AlertParam{
 	},
 }).WithSeverityNum(10)
 
-func TestAlert_ToCef(t *testing.T) {
+func TestRawAlert_ToCef(t *testing.T) {
+	var testAlert alert.Alert = testRawAlert
+
 	result, err := testAlert.ToCef(alert.ToCefParam{
 		VendorConfig: alert.VendorReflective,
 		Hostname:     "test-machine",
@@ -49,7 +51,9 @@ func TestAlert_ToCef(t *testing.T) {
 	}
 }
 
-func TestAlert_ToSyslogRFC3164WithCef(t *testing.T) {
+func TestRawAlert_ToSyslogRFC3164WithCef(t *testing.T) {
+	var testAlert alert.Alert = testRawAlert
+
 	result, err := testAlert.ToSyslogRFC3164WithCef(alert.ToSyslogRFC3164WithCefParam{
 		VendorConfig: alert.VendorReflective,
 		Hostname:     "test-machine",
