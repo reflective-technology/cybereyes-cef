@@ -295,18 +295,6 @@ func EnhanceExtensionsFromWebFields(fields types.Web, vendorAbbreviation string)
 				extension[transformedKey] = *fields.SrcCountry
 			}
 		}
-		if fields.Status != nil {
-			transformedKey, err := UserDefinedFieldName("status", vendorAbbreviation)
-			if err == nil {
-				extension[transformedKey] = *fields.Status
-			}
-		}
-		if fields.UriQuery != nil {
-			transformedKey, err := UserDefinedFieldName("uri_query", vendorAbbreviation)
-			if err == nil {
-				extension[transformedKey] = *fields.UriQuery
-			}
-		}
 		if fields.VendorProduct != nil {
 			transformedKey, err := UserDefinedFieldName("vendor_product", vendorAbbreviation)
 			if err == nil {

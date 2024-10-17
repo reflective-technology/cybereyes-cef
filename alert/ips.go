@@ -215,12 +215,6 @@ func EnhanceExtensionsFromIpsFields(fields types.Ips, vendorAbbreviation string)
 				extension[transformedKey] = *fields.SrcCountry
 			}
 		}
-		if fields.UriQuery != nil {
-			transformedKey, err := UserDefinedFieldName("uri_query", vendorAbbreviation)
-			if err == nil {
-				extension[transformedKey] = *fields.UriQuery
-			}
-		}
 		if fields.UserAgent != nil {
 			transformedKey, err := UserDefinedFieldName("user_agent", vendorAbbreviation)
 			if err == nil {

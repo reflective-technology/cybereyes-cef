@@ -93,6 +93,7 @@ func TestGeneratedAlertType_ToCef(t *testing.T) {
 	})
 	assert.NoError(t, err)
 
-	const expected = `CEF:0|Reflective|CyberEyes|3|rule-id-xxx|Test Alert|10|dpt=443 dst=192.168.1.2 dvchost=test-machine eventId=id-xxx in=4096 out=8192 request=/path/to/resource requestClientApplication=Mozilla/5.0 requestContext=http://example.com requestCookies=testcookie\=testvalue requestMethod=GET rt=1729045128576 src=192.168.1.1 cs1=Test Alert cs1Label=alertname cs2=low cs2Label=severity cs3=Test Alert Subject cs3Label=summary cs4=Test Alert Description cs4Label=description cs5=200 cs5Label=status cs6=param1\=value1&param2\=value2 cs6Label=uri_query CEStatus=200 CEUriQuery=param1\=value1&param2\=value2`
+	const expected = `CEF:0|Reflective|CyberEyes|3|rule-id-xxx|Test Alert|10|dpt=443 dst=192.168.1.2 dvchost=test-machine eventId=id-xxx in=4096 out=8192 request=/path/to/resource requestClientApplication=Mozilla/5.0 requestContext=http://example.com requestCookies=testcookie\=testvalue requestMethod=GET rt=1729045128576 src=192.168.1.1 cs1=Test Alert cs1Label=alertname cs2=low cs2Label=severity cs3=Test Alert Subject cs3Label=summary cs4=Test Alert Description cs4Label=description cs5=200 cs5Label=status cs6=param1\=value1&param2\=value2 cs6Label=uri_query`
 	assert.Equal(t, expected, result)
+
 }

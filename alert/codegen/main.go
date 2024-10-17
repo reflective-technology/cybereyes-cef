@@ -122,6 +122,15 @@ func main() {
 		haveUriQueryField := false
 
 		for _, field := range allFields {
+			if field.JsonName == "status" {
+				haveStatusField = true
+				continue
+			}
+			if field.JsonName == "uri_query" {
+				haveUriQueryField = true
+				continue
+			}
+
 			if standardCefField, ok := alert.MapGeneralFieldsToCefStandardFields(field.JsonName); ok {
 				standardCefFields = append(standardCefFields, &StandardCefFields{
 					AlertField:        field,
@@ -130,13 +139,8 @@ func main() {
 			} else {
 				userDefinedFields = append(userDefinedFields, field)
 			}
-			if field.JsonName == "status" {
-				haveStatusField = true
-			}
-			if field.JsonName == "uri_query" {
-				haveUriQueryField = true
-			}
 		}
+
 		data := AlertStructData{
 			LogTypeName:       reflect.TypeOf(alertType).Name(),
 			UserDefinedFields: userDefinedFields,

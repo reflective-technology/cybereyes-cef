@@ -340,18 +340,6 @@ func EnhanceExtensionsFromWebApplicationFirewallFields(fields types.WebApplicati
 				extension[transformedKey] = *fields.SrcCountry
 			}
 		}
-		if fields.Status != nil {
-			transformedKey, err := UserDefinedFieldName("status", vendorAbbreviation)
-			if err == nil {
-				extension[transformedKey] = *fields.Status
-			}
-		}
-		if fields.UriQuery != nil {
-			transformedKey, err := UserDefinedFieldName("uri_query", vendorAbbreviation)
-			if err == nil {
-				extension[transformedKey] = *fields.UriQuery
-			}
-		}
 		if fields.UserAgent != nil {
 			transformedKey, err := UserDefinedFieldName("user-agent", vendorAbbreviation)
 			if err == nil {
