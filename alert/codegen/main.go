@@ -33,6 +33,8 @@ type AlertStructData struct {
 	LogTypeName       string
 	UserDefinedFields []*AlertField
 	StandardCefFields []*StandardCefFields
+	HaveStatusField   bool
+	HaveUriQueryField bool
 }
 
 type AlertField struct {
@@ -116,6 +118,8 @@ func main() {
 		allFields := ListAlertFields(alertType, FilterOutFieldsWithJsonTags("tags"))
 		userDefinedFields := []*AlertField{}
 		standardCefFields := []*StandardCefFields{}
+		haveStatusField := false
+		haveUriQueryField := false
 
 		for _, field := range allFields {
 			if standardCefField, ok := alert.MapGeneralFieldsToCefStandardFields(field.JsonName); ok {
@@ -126,11 +130,19 @@ func main() {
 			} else {
 				userDefinedFields = append(userDefinedFields, field)
 			}
+			if field.JsonName == "status" {
+				haveStatusField = true
+			}
+			if field.JsonName == "uri_query" {
+				haveUriQueryField = true
+			}
 		}
 		data := AlertStructData{
 			LogTypeName:       reflect.TypeOf(alertType).Name(),
 			UserDefinedFields: userDefinedFields,
 			StandardCefFields: standardCefFields,
+			HaveStatusField:   haveStatusField,
+			HaveUriQueryField: haveUriQueryField,
 		}
 
 		if err := RunTemplate(data, outputDir); err != nil {

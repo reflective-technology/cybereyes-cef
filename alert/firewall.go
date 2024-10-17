@@ -30,223 +30,192 @@ func EnhanceExtensionsFromFirewallFields(fields types.Firewall, vendorAbbreviati
 			return ErrExtensionIsNil
 		}
 
+		// handle standard cef fields
 		if fields.Action != nil {
 			extension["act"] = *fields.Action
 		}
-
 		if fields.BytesIn != nil {
 			extension["in"] = *fields.BytesIn
 		}
-
 		if fields.BytesOut != nil {
 			extension["out"] = *fields.BytesOut
 		}
-
 		if fields.Dest != nil {
 			extension["dst"] = *fields.Dest
 		}
-
 		if fields.DestPort != nil {
 			extension["dpt"] = *fields.DestPort
 		}
-
 		if fields.Src != nil {
 			extension["src"] = *fields.Src
 		}
-
 		if fields.SrcPort != nil {
 			extension["spt"] = *fields.SrcPort
 		}
 
+		// handle user defined fields
 		if fields.Timestamp != nil {
 			transformedKey, err := UserDefinedFieldName("@timestamp", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Timestamp
 			}
 		}
-
 		if fields.Version != nil {
 			transformedKey, err := UserDefinedFieldName("@version", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Version
 			}
 		}
-
 		if fields.Id != nil {
 			transformedKey, err := UserDefinedFieldName("_id", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Id
 			}
 		}
-
 		if fields.Index != nil {
 			transformedKey, err := UserDefinedFieldName("_index", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Index
 			}
 		}
-
 		if fields.Act != nil {
 			transformedKey, err := UserDefinedFieldName("act", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Act
 			}
 		}
-
 		if fields.Category != nil {
 			transformedKey, err := UserDefinedFieldName("category", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Category
 			}
 		}
-
 		if fields.DateDay != nil {
 			transformedKey, err := UserDefinedFieldName("date_day", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateDay
 			}
 		}
-
 		if fields.DateHour != nil {
 			transformedKey, err := UserDefinedFieldName("date_hour", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateHour
 			}
 		}
-
 		if fields.DateMinute != nil {
 			transformedKey, err := UserDefinedFieldName("date_minute", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateMinute
 			}
 		}
-
 		if fields.DateMonth != nil {
 			transformedKey, err := UserDefinedFieldName("date_month", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateMonth
 			}
 		}
-
 		if fields.DateSecond != nil {
 			transformedKey, err := UserDefinedFieldName("date_second", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateSecond
 			}
 		}
-
 		if fields.DateYear != nil {
 			transformedKey, err := UserDefinedFieldName("date_year", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateYear
 			}
 		}
-
 		if fields.DestAsName != nil {
 			transformedKey, err := UserDefinedFieldName("dest_as_name", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DestAsName
 			}
 		}
-
 		if fields.DestAsn != nil {
 			transformedKey, err := UserDefinedFieldName("dest_asn", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DestAsn
 			}
 		}
-
 		if fields.DestCountry != nil {
 			transformedKey, err := UserDefinedFieldName("dest_country", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DestCountry
 			}
 		}
-
 		if fields.Domain != nil {
 			transformedKey, err := UserDefinedFieldName("domain", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Domain
 			}
 		}
-
 		if fields.Event != nil {
 			transformedKey, err := UserDefinedFieldName("event", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Event
 			}
 		}
-
 		if fields.Fingerprint != nil {
 			transformedKey, err := UserDefinedFieldName("fingerprint", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Fingerprint
 			}
 		}
-
 		if fields.HostIp != nil {
 			transformedKey, err := UserDefinedFieldName("host_ip", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.HostIp
 			}
 		}
-
 		if fields.HostName != nil {
 			transformedKey, err := UserDefinedFieldName("host_name", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.HostName
 			}
 		}
-
 		if fields.ProjectId != nil {
 			transformedKey, err := UserDefinedFieldName("project_id", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.ProjectId
 			}
 		}
-
 		if fields.Protocol != nil {
 			transformedKey, err := UserDefinedFieldName("protocol", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Protocol
 			}
 		}
-
 		if fields.SessionId != nil {
 			transformedKey, err := UserDefinedFieldName("session_id", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.SessionId
 			}
 		}
-
 		if fields.Severity != nil {
 			transformedKey, err := UserDefinedFieldName("severity", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Severity
 			}
 		}
-
 		if fields.SrcAsName != nil {
 			transformedKey, err := UserDefinedFieldName("src_as_name", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.SrcAsName
 			}
 		}
-
 		if fields.SrcAsn != nil {
 			transformedKey, err := UserDefinedFieldName("src_asn", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.SrcAsn
 			}
 		}
-
 		if fields.SrcCountry != nil {
 			transformedKey, err := UserDefinedFieldName("src_country", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.SrcCountry
 			}
 		}
-
 		if fields.VendorProduct != nil {
 			transformedKey, err := UserDefinedFieldName("vendor_product", vendorAbbreviation)
 			if err == nil {

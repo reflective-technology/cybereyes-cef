@@ -30,204 +30,177 @@ func EnhanceExtensionsFromSysmonWindowsFields(fields types.SysmonWindows, vendor
 			return ErrExtensionIsNil
 		}
 
+		// handle standard cef fields
 		if fields.ProcessId != nil {
 			extension["spid"] = *fields.ProcessId
 		}
-
 		if fields.ProcessName != nil {
 			extension["sproc"] = *fields.ProcessName
 		}
-
 		if fields.ProcessPath != nil {
 			extension["filePath"] = *fields.ProcessPath
 		}
-
 		if fields.User != nil {
 			extension["suser"] = *fields.User
 		}
 
+		// handle user defined fields
 		if fields.Timestamp != nil {
 			transformedKey, err := UserDefinedFieldName("@timestamp", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Timestamp
 			}
 		}
-
 		if fields.Version != nil {
 			transformedKey, err := UserDefinedFieldName("@version", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Version
 			}
 		}
-
 		if fields.Id != nil {
 			transformedKey, err := UserDefinedFieldName("_id", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Id
 			}
 		}
-
 		if fields.Index != nil {
 			transformedKey, err := UserDefinedFieldName("_index", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Index
 			}
 		}
-
 		if fields.Cmdline != nil {
 			transformedKey, err := UserDefinedFieldName("cmdline", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Cmdline
 			}
 		}
-
 		if fields.DateDay != nil {
 			transformedKey, err := UserDefinedFieldName("date_day", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateDay
 			}
 		}
-
 		if fields.DateHour != nil {
 			transformedKey, err := UserDefinedFieldName("date_hour", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateHour
 			}
 		}
-
 		if fields.DateMinute != nil {
 			transformedKey, err := UserDefinedFieldName("date_minute", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateMinute
 			}
 		}
-
 		if fields.DateMonth != nil {
 			transformedKey, err := UserDefinedFieldName("date_month", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateMonth
 			}
 		}
-
 		if fields.DateSecond != nil {
 			transformedKey, err := UserDefinedFieldName("date_second", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateSecond
 			}
 		}
-
 		if fields.DateYear != nil {
 			transformedKey, err := UserDefinedFieldName("date_year", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateYear
 			}
 		}
-
 		if fields.FileName != nil {
 			transformedKey, err := UserDefinedFieldName("file_name", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.FileName
 			}
 		}
-
 		if fields.Fingerprint != nil {
 			transformedKey, err := UserDefinedFieldName("fingerprint", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Fingerprint
 			}
 		}
-
 		if fields.HashesImphash != nil {
 			transformedKey, err := UserDefinedFieldName("hashes_imphash", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.HashesImphash
 			}
 		}
-
 		if fields.HashesMd5 != nil {
 			transformedKey, err := UserDefinedFieldName("hashes_md5", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.HashesMd5
 			}
 		}
-
 		if fields.HashesSha1 != nil {
 			transformedKey, err := UserDefinedFieldName("hashes_sha1", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.HashesSha1
 			}
 		}
-
 		if fields.HashesSha256 != nil {
 			transformedKey, err := UserDefinedFieldName("hashes_sha256", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.HashesSha256
 			}
 		}
-
 		if fields.HostIp != nil {
 			transformedKey, err := UserDefinedFieldName("host_ip", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.HostIp
 			}
 		}
-
 		if fields.HostName != nil {
 			transformedKey, err := UserDefinedFieldName("host_name", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.HostName
 			}
 		}
-
 		if fields.OriginalFileName != nil {
 			transformedKey, err := UserDefinedFieldName("original_file_name", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.OriginalFileName
 			}
 		}
-
 		if fields.ParentCmdline != nil {
 			transformedKey, err := UserDefinedFieldName("parent_cmdline", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.ParentCmdline
 			}
 		}
-
 		if fields.ParentName != nil {
 			transformedKey, err := UserDefinedFieldName("parent_name", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.ParentName
 			}
 		}
-
 		if fields.ParentProcessPath != nil {
 			transformedKey, err := UserDefinedFieldName("parent_process_path", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.ParentProcessPath
 			}
 		}
-
 		if fields.ParentUser != nil {
 			transformedKey, err := UserDefinedFieldName("parent_user", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.ParentUser
 			}
 		}
-
 		if fields.ProcessCurrentDirectory != nil {
 			transformedKey, err := UserDefinedFieldName("process_current_directory", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.ProcessCurrentDirectory
 			}
 		}
-
 		if fields.ProjectId != nil {
 			transformedKey, err := UserDefinedFieldName("project_id", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.ProjectId
 			}
 		}
-
 		if fields.RuleName != nil {
 			transformedKey, err := UserDefinedFieldName("rule_name", vendorAbbreviation)
 			if err == nil {

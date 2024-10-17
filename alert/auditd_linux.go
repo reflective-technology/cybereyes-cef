@@ -30,226 +30,195 @@ func EnhanceExtensionsFromAuditdLinuxFields(fields types.AuditdLinux, vendorAbbr
 			return ErrExtensionIsNil
 		}
 
+		// handle standard cef fields
 		if fields.Args != nil {
 			extension["sproc"] = *fields.Args
 		}
-
 		if fields.Exe != nil {
 			extension["sproc"] = *fields.Exe
 		}
-
 		if fields.ProcessId != nil {
 			extension["spid"] = *fields.ProcessId
 		}
-
 		if fields.Proctitle != nil {
 			extension["sproc"] = *fields.Proctitle
 		}
-
 		if fields.Uid != nil {
 			extension["suid"] = *fields.Uid
 		}
-
 		if fields.User != nil {
 			extension["suser"] = *fields.User
 		}
 
+		// handle user defined fields
 		if fields.Timestamp != nil {
 			transformedKey, err := UserDefinedFieldName("@timestamp", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Timestamp
 			}
 		}
-
 		if fields.Version != nil {
 			transformedKey, err := UserDefinedFieldName("@version", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Version
 			}
 		}
-
 		if fields.Id != nil {
 			transformedKey, err := UserDefinedFieldName("_id", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Id
 			}
 		}
-
 		if fields.Index != nil {
 			transformedKey, err := UserDefinedFieldName("_index", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Index
 			}
 		}
-
 		if fields.Account != nil {
 			transformedKey, err := UserDefinedFieldName("account", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Account
 			}
 		}
-
 		if fields.ActualUser != nil {
 			transformedKey, err := UserDefinedFieldName("actual_user", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.ActualUser
 			}
 		}
-
 		if fields.Auid != nil {
 			transformedKey, err := UserDefinedFieldName("auid", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Auid
 			}
 		}
-
 		if fields.Cmdline != nil {
 			transformedKey, err := UserDefinedFieldName("cmdline", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Cmdline
 			}
 		}
-
 		if fields.DateDay != nil {
 			transformedKey, err := UserDefinedFieldName("date_day", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateDay
 			}
 		}
-
 		if fields.DateHour != nil {
 			transformedKey, err := UserDefinedFieldName("date_hour", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateHour
 			}
 		}
-
 		if fields.DateMinute != nil {
 			transformedKey, err := UserDefinedFieldName("date_minute", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateMinute
 			}
 		}
-
 		if fields.DateMonth != nil {
 			transformedKey, err := UserDefinedFieldName("date_month", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateMonth
 			}
 		}
-
 		if fields.DateSecond != nil {
 			transformedKey, err := UserDefinedFieldName("date_second", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateSecond
 			}
 		}
-
 		if fields.DateYear != nil {
 			transformedKey, err := UserDefinedFieldName("date_year", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateYear
 			}
 		}
-
 		if fields.EventId != nil {
 			transformedKey, err := UserDefinedFieldName("event_id", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.EventId
 			}
 		}
-
 		if fields.Fingerprint != nil {
 			transformedKey, err := UserDefinedFieldName("fingerprint", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Fingerprint
 			}
 		}
-
 		if fields.HostIp != nil {
 			transformedKey, err := UserDefinedFieldName("host_ip", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.HostIp
 			}
 		}
-
 		if fields.HostName != nil {
 			transformedKey, err := UserDefinedFieldName("host_name", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.HostName
 			}
 		}
-
 		if fields.Key != nil {
 			transformedKey, err := UserDefinedFieldName("key", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Key
 			}
 		}
-
 		if fields.Op != nil {
 			transformedKey, err := UserDefinedFieldName("op", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Op
 			}
 		}
-
 		if fields.ProcessCurrentDirectory != nil {
 			transformedKey, err := UserDefinedFieldName("process_current_directory", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.ProcessCurrentDirectory
 			}
 		}
-
 		if fields.ProjectId != nil {
 			transformedKey, err := UserDefinedFieldName("project_id", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.ProjectId
 			}
 		}
-
 		if fields.Res != nil {
 			transformedKey, err := UserDefinedFieldName("res", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Res
 			}
 		}
-
 		if fields.RuleName != nil {
 			transformedKey, err := UserDefinedFieldName("rule_name", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.RuleName
 			}
 		}
-
 		if fields.Success != nil {
 			transformedKey, err := UserDefinedFieldName("success", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Success
 			}
 		}
-
 		if fields.Syscall != nil {
 			transformedKey, err := UserDefinedFieldName("syscall", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.Syscall
 			}
 		}
-
 		if fields.TargetId != nil {
 			transformedKey, err := UserDefinedFieldName("target_id", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.TargetId
 			}
 		}
-
 		if fields.TargetIdName != nil {
 			transformedKey, err := UserDefinedFieldName("target_id_name", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.TargetIdName
 			}
 		}
-
 		if fields.Terminal != nil {
 			transformedKey, err := UserDefinedFieldName("terminal", vendorAbbreviation)
 			if err == nil {

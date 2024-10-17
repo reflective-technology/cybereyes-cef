@@ -35,13 +35,28 @@ func EnhanceExtensionsFrom{{ template "AlertFieldName" . }}(fields {{ template "
 			return ErrExtensionIsNil
 		}
 
-		{{ range .StandardCefFields }}
+		{{ if .HaveStatusField -}}
+		if fields.Status != nil {
+			extension["cs5Label"] = "status"
+			extension["cs5"] = *fields.Status
+		}
+		{{ end }}
+		{{ if .HaveUriQueryField -}}
+		if fields.UriQuery != nil {
+			extension["cs6Label"] = "uri_query"
+			extension["cs6"] = *fields.UriQuery
+		}
+		{{ end }}
+
+		{{ if len .StandardCefFields -}}// handle standard cef fields{{ end }}
+		{{ range .StandardCefFields -}}
 		if fields.{{ .StructName }} != nil {
 			extension["{{ .StandardFieldName }}"] = *fields.{{ .StructName }}
 		}
 		{{ end }}
 
-		{{ range .UserDefinedFields }}
+		{{ if len .UserDefinedFields -}}// handle user defined fields{{ end }}
+		{{ range .UserDefinedFields -}}
 		if fields.{{ .StructName }} != nil {
 			transformedKey, err := UserDefinedFieldName("{{ .JsonName }}", vendorAbbreviation)
 			if err == nil {
