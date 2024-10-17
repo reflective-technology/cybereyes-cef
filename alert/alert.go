@@ -1,5 +1,7 @@
 package alert
 
+//go:generate go run codegen/main.go
+
 import (
 	"errors"
 	"fmt"
@@ -22,6 +24,9 @@ const (
 )
 
 type AlertMetaField struct {
+	// alert_id
+	ID string
+
 	// rule_id
 	RuleID string
 
@@ -73,8 +78,8 @@ func NewRawAlert(param RawAlertParam) *RawAlert {
 func (alert *RawAlert) ToCef(param ToCefParam) (string, error) {
 	return ResolveCef(
 		alert.Meta, param.VendorConfig,
-		EnhanceExtensionsFromHostname(param.Hostname),
-		EnhanceExtensionsFromAlertMeta(alert.Meta),
+		EnhanceExtensionsWithHostname(param.Hostname),
+		EnhanceExtensionsWithAlertMeta(alert.Meta),
 		EnhanceExtensionsFromGeneralFields(alert.generalFields, param.VendorConfig.Abbreviation),
 	)
 }
@@ -165,7 +170,7 @@ var (
 
 type ExtensionsPipeline func(extensions map[string]string) error
 
-func EnhanceExtensionsFromAlertMeta(meta AlertMetaField) ExtensionsPipeline {
+func EnhanceExtensionsWithAlertMeta(meta AlertMetaField) ExtensionsPipeline {
 	return func(extension map[string]string) error {
 		if extension == nil {
 			return ErrExtensionIsNil
@@ -173,6 +178,7 @@ func EnhanceExtensionsFromAlertMeta(meta AlertMetaField) ExtensionsPipeline {
 
 		// add standard fields from alert meta
 		extension["rt"] = fmt.Sprintf("%d", meta.Timestamp.UnixMilli())
+		extension["eventId"] = meta.ID
 
 		// add custom fields from alert meta
 		extension["cs1Label"] = "alertname"
@@ -191,7 +197,7 @@ func EnhanceExtensionsFromAlertMeta(meta AlertMetaField) ExtensionsPipeline {
 	}
 }
 
-func EnhanceExtensionsFromHostname(hostname string) ExtensionsPipeline {
+func EnhanceExtensionsWithHostname(hostname string) ExtensionsPipeline {
 	return func(extensions map[string]string) error {
 		if extensions == nil {
 			return ErrExtensionIsNil
@@ -225,7 +231,7 @@ func EnhanceExtensionsFromGeneralFields(generalFields map[string]string, vendorA
 			}
 
 			// add cef standard fields
-			transformedKey, ok := generalFieldsToCefStandardFieldsMap[k]
+			transformedKey, ok := MapGeneralFieldsToCefStandardFields(k)
 			if ok {
 				extensions[transformedKey] = v
 				continue
@@ -269,4 +275,18 @@ func ResolveCef(alertMeta AlertMetaField, vendorConfig VendorConfig, pipelines .
 	})
 
 	return event.String()
+}
+
+func SyslogRFC3164WithCef(alert Alert, param ToSyslogRFC3164WithCefParam) (string, error) {
+
+	msg, err := alert.ToCef(ToCefParam{
+		VendorConfig: param.VendorConfig,
+		Hostname:     param.Hostname,
+	})
+	if err != nil {
+		return "", err
+	}
+
+	result := fmt.Sprintf("<%d>%s %s %s: %s", param.Priority, param.Timestamp.Format(time.Stamp), param.Hostname, param.VendorConfig.ProductName, msg)
+	return result, nil
 }

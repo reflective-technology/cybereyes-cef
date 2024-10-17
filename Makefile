@@ -6,3 +6,6 @@ codegen:
 		schema_name=$$(basename "$${schema%.*}"); \
 		go-jsonschema -p types "$$schema" -e -o types/$${schema_name}.go; \
 	done
+
+	go generate ./...
+	go fmt ./...

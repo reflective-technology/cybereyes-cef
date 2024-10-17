@@ -2,7 +2,6 @@ package alert
 
 var (
 	generalFieldsToCefStandardFieldsMap = map[string]string{
-		"timestamp":       "rt",
 		"id":              "eventId",
 		"bytes_in":        "in",
 		"bytes_out":       "out",
@@ -28,3 +27,8 @@ var (
 		"uid":             "suid",
 	}
 )
+
+func MapGeneralFieldsToCefStandardFields(field string) (string, bool) {
+	cefField, ok := generalFieldsToCefStandardFieldsMap[field]
+	return cefField, ok
+}
