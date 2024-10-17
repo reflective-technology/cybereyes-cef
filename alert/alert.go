@@ -71,75 +71,12 @@ func NewRawAlert(param RawAlertParam) *RawAlert {
 // 2. custom labels and values
 // 3. user defined fields
 func (alert *RawAlert) ToCef(param ToCefParam) (string, error) {
-	extensions := make(map[string]string)
-	{
-		// add standard fields from alert meta
-		extensions["rt"] = fmt.Sprintf("%d", alert.Meta.Timestamp.UnixMilli())
-		extensions["dvchost"] = param.Hostname
-
-		// add custom fields from alert meta
-		extensions["cs1Label"] = "alertname"
-		extensions["cs1"] = alert.Meta.Name
-
-		extensions["cs2Label"] = "severity"
-		extensions["cs2"] = string(alert.Meta.Severity)
-
-		extensions["cs3Label"] = "summary"
-		extensions["cs3"] = alert.Meta.AlertSubject
-
-		extensions["cs4Label"] = "description"
-		extensions["cs4"] = alert.Meta.Description
-
-		// add custom fields from GeneralFields
-		if status, ok := alert.generalFields["status"]; ok {
-			extensions["cs5Label"] = "status"
-			extensions["cs5"] = status
-		}
-		if uriQuery, ok := alert.generalFields["uri_query"]; ok {
-			extensions["cs6Label"] = "uri_query"
-			extensions["cs6"] = uriQuery
-		}
-
-		for k, v := range alert.generalFields {
-			// skip status and uri_query because they are already included in custom fields
-			if k == "status" || k == "uri_query" {
-				continue
-			}
-
-			// add cef standard fields
-			transformedKey, ok := generalFieldsToCefStandardFieldsMap[k]
-			if ok {
-				extensions[transformedKey] = v
-				continue
-			}
-
-			// add user defined fields
-			transformedKey, err := UserDefinedFieldName(k, param.VendorConfig.Abbreviation)
-			if err == nil {
-				extensions[transformedKey] = v
-				continue
-			}
-		}
-	}
-
-	severity, err := ResolveCEFSeverity(alert.Meta)
-	if err != nil {
-		return "", err
-	}
-
-	event := cefevent.NewCefEvent(cefevent.CefEventParams{
-		Version:               cefevent.CefVersion0,
-		DeviceVendor:          param.VendorConfig.VendorName,
-		DeviceProduct:         param.VendorConfig.ProductName,
-		DeviceVersion:         param.VendorConfig.ProductVersion,
-		DeviceEventClassId:    alert.Meta.RuleID,
-		Name:                  alert.Meta.Name,
-		Severity:              severity,
-		Extensions:            extensions,
-		ExtensionsKeySortFunc: VendorBasedExtensionsKeySortFunc(param.VendorConfig),
-	})
-
-	return event.String()
+	return ResolveCef(
+		alert.Meta, param.VendorConfig,
+		EnhanceExtensionsFromHostname(param.Hostname),
+		EnhanceExtensionsFromAlertMeta(alert.Meta),
+		EnhanceExtensionsFromGeneralFields(alert.generalFields, param.VendorConfig.Abbreviation),
+	)
 }
 
 func (alert *RawAlert) ToSyslogRFC3164WithCef(param ToSyslogRFC3164WithCefParam) (string, error) {
@@ -220,4 +157,116 @@ func DefaultSeverityPoint(severity string) (int, error) {
 	default:
 		return 0, fmt.Errorf("unknown severity: %s", severity)
 	}
+}
+
+var (
+	ErrExtensionIsNil = errors.New("extension is nil")
+)
+
+type ExtensionsPipeline func(extensions map[string]string) error
+
+func EnhanceExtensionsFromAlertMeta(meta AlertMetaField) ExtensionsPipeline {
+	return func(extension map[string]string) error {
+		if extension == nil {
+			return ErrExtensionIsNil
+		}
+
+		// add standard fields from alert meta
+		extension["rt"] = fmt.Sprintf("%d", meta.Timestamp.UnixMilli())
+
+		// add custom fields from alert meta
+		extension["cs1Label"] = "alertname"
+		extension["cs1"] = meta.Name
+
+		extension["cs2Label"] = "severity"
+		extension["cs2"] = string(meta.Severity)
+
+		extension["cs3Label"] = "summary"
+		extension["cs3"] = meta.AlertSubject
+
+		extension["cs4Label"] = "description"
+		extension["cs4"] = meta.Description
+
+		return nil
+	}
+}
+
+func EnhanceExtensionsFromHostname(hostname string) ExtensionsPipeline {
+	return func(extensions map[string]string) error {
+		if extensions == nil {
+			return ErrExtensionIsNil
+		}
+
+		extensions["dvchost"] = hostname
+		return nil
+	}
+}
+
+func EnhanceExtensionsFromGeneralFields(generalFields map[string]string, vendorAbbreviation string) ExtensionsPipeline {
+	return func(extensions map[string]string) error {
+		if extensions == nil {
+			return ErrExtensionIsNil
+		}
+
+		// add custom fields from GeneralFields
+		if status, ok := generalFields["status"]; ok {
+			extensions["cs5Label"] = "status"
+			extensions["cs5"] = status
+		}
+		if uriQuery, ok := generalFields["uri_query"]; ok {
+			extensions["cs6Label"] = "uri_query"
+			extensions["cs6"] = uriQuery
+		}
+
+		for k, v := range generalFields {
+			// skip status and uri_query because they are already included in custom fields
+			if k == "status" || k == "uri_query" {
+				continue
+			}
+
+			// add cef standard fields
+			transformedKey, ok := generalFieldsToCefStandardFieldsMap[k]
+			if ok {
+				extensions[transformedKey] = v
+				continue
+			}
+
+			// add user defined fields
+			transformedKey, err := UserDefinedFieldName(k, vendorAbbreviation)
+			if err == nil {
+				extensions[transformedKey] = v
+				continue
+			}
+		}
+
+		return nil
+	}
+}
+
+func ResolveCef(alertMeta AlertMetaField, vendorConfig VendorConfig, pipelines ...ExtensionsPipeline) (string, error) {
+	extension := make(map[string]string)
+	for _, pipeline := range pipelines {
+		if err := pipeline(extension); err != nil {
+			return "", err
+		}
+	}
+
+	severity, err := ResolveCEFSeverity(alertMeta)
+	if err != nil {
+		return "", err
+	}
+
+	event := cefevent.NewCefEvent(cefevent.CefEventParams{
+		Version:               cefevent.CefVersion0,
+		DeviceVendor:          vendorConfig.VendorName,
+		DeviceProduct:         vendorConfig.ProductName,
+		DeviceVersion:         vendorConfig.ProductVersion,
+		DeviceEventClassId:    alertMeta.RuleID,
+		Name:                  alertMeta.Name,
+		Severity:              severity,
+		Extensions:            extension,
+		ExtensionsKeySortFunc: VendorBasedExtensionsKeySortFunc(vendorConfig),
+	})
+
+	return event.String()
 }
