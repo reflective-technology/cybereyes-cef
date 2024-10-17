@@ -7,7 +7,6 @@ import (
 )
 
 func main() {
-
 	// create CEF event
 	f := make(map[string]string)
 	f["src"] = "127.0.0.1"

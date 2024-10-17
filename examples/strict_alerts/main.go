@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-
 	webAlert := alert.WebAlert{
 		AlertMetaField: alert.AlertMetaField{
 			ID:           "a1b2c3d4-e5f6-7890-abcd-1234567890ab",
