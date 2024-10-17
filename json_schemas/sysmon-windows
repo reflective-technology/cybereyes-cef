@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "type": "string"
+    },
+    "_index": {
+      "type": "string"
+    },
+    "@timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "@version": {
+      "type": "string"
+    },
+    "cmdline": {
+      "type": "string"
+    },
+    "date_day": {
+      "type": "string"
+    },
+    "date_hour": {
+      "type": "string"
+    },
+    "date_minute": {
+      "type": "string"
+    },
+    "date_month": {
+      "type": "string"
+    },
+    "date_second": {
+      "type": "string"
+    },
+    "date_year": {
+      "type": "string"
+    },
+    "file_name": {
+      "type": "string"
+    },
+    "fingerprint": {
+      "type": "string"
+    },
+    "hashes_imphash": {
+      "type": "string"
+    },
+    "hashes_md5": {
+      "type": "string"
+    },
+    "hashes_sha1": {
+      "type": "string"
+    },
+    "hashes_sha256": {
+      "type": "string"
+    },
+    "host_ip": {
+      "type": "string"
+    },
+    "host_name": {
+      "type": "string"
+    },
+    "original_file_name": {
+      "type": "string"
+    },
+    "parent_cmdline": {
+      "type": "string"
+    },
+    "parent_name": {
+      "type": "string"
+    },
+    "parent_process_path": {
+      "type": "string"
+    },
+    "parent_user": {
+      "type": "string"
+    },
+    "process_current_directory": {
+      "type": "string"
+    },
+    "process_id": {
+      "type": "string"
+    },
+    "process_name": {
+      "type": "string"
+    },
+    "process_path": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "rule_name": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "user": {
+      "type": "string"
+    }
+  },
+  "required": []
+}

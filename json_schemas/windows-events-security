@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "type": "string"
+    },
+    "_index": {
+      "type": "string"
+    },
+    "@timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "@version": {
+      "type": "string"
+    },
+    "account_domain": {
+      "type": "string"
+    },
+    "account_name": {
+      "type": "string"
+    },
+    "application_path": {
+      "type": "string"
+    },
+    "cmdline": {
+      "type": "string"
+    },
+    "date_day": {
+      "type": "string"
+    },
+    "date_hour": {
+      "type": "string"
+    },
+    "date_minute": {
+      "type": "string"
+    },
+    "date_month": {
+      "type": "string"
+    },
+    "date_second": {
+      "type": "string"
+    },
+    "date_year": {
+      "type": "string"
+    },
+    "event_category": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "fingerprint": {
+      "type": "string"
+    },
+    "host_ip": {
+      "type": "string"
+    },
+    "host_name": {
+      "type": "string"
+    },
+    "logon_process_name": {
+      "type": "string"
+    },
+    "logon_process_type": {
+      "type": "string"
+    },
+    "new_process_id": {
+      "type": "string"
+    },
+    "new_process_path": {
+      "type": "string"
+    },
+    "parent_process_path": {
+      "type": "string"
+    },
+    "process_id": {
+      "type": "string"
+    },
+    "process_name": {
+      "type": "string"
+    },
+    "process_path": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "service_name": {
+      "type": "string"
+    },
+    "service_start_type": {
+      "type": "string"
+    },
+    "service_type": {
+      "type": "string"
+    },
+    "src": {
+      "type": "string"
+    },
+    "src_host_name": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "target_domain_name": {
+      "type": "string"
+    },
+    "user": {
+      "type": "string"
+    }
+  },
+  "required": []
+}

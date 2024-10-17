@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "type": "string"
+    },
+    "_index": {
+      "type": "string"
+    },
+    "@timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "@version": {
+      "type": "string"
+    },
+    "account": {
+      "type": "string"
+    },
+    "actual_user": {
+      "type": "string"
+    },
+    "args": {
+      "type": "string"
+    },
+    "auid": {
+      "type": "string"
+    },
+    "cmdline": {
+      "type": "string"
+    },
+    "date_day": {
+      "type": "string"
+    },
+    "date_hour": {
+      "type": "string"
+    },
+    "date_minute": {
+      "type": "string"
+    },
+    "date_month": {
+      "type": "string"
+    },
+    "date_second": {
+      "type": "string"
+    },
+    "date_year": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "exe": {
+      "type": "string"
+    },
+    "fingerprint": {
+      "type": "string"
+    },
+    "host_ip": {
+      "type": "string"
+    },
+    "host_name": {
+      "type": "string"
+    },
+    "key": {
+      "type": "string"
+    },
+    "op": {
+      "type": "string"
+    },
+    "process_current_directory": {
+      "type": "string"
+    },
+    "process_id": {
+      "type": "string"
+    },
+    "proctitle": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "res": {
+      "type": "string"
+    },
+    "rule_name": {
+      "type": "string"
+    },
+    "success": {
+      "type": "string"
+    },
+    "syscall": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "target_id_name": {
+      "type": "string"
+    },
+    "terminal": {
+      "type": "string"
+    },
+    "uid": {
+      "type": "string"
+    },
+    "user": {
+      "type": "string"
+    }
+  },
+  "required": []
+}
