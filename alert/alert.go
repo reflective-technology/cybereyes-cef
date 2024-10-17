@@ -11,6 +11,39 @@ import (
 	"golang.org/x/text/language"
 )
 
+type AlertSeverity string
+
+const (
+	AlertSeverityInfo     AlertSeverity = "info"
+	AlertSeverityLow      AlertSeverity = "low"
+	AlertSeverityMedium   AlertSeverity = "medium"
+	AlertSeverityHigh     AlertSeverity = "high"
+	AlertSeverityCritical AlertSeverity = "critical"
+)
+
+type AlertMetaField struct {
+	// rule_id
+	RuleID string
+
+	// name
+	Name string
+
+	// alert_subject
+	AlertSubject string
+
+	// alert_desc
+	Description string
+
+	// severity
+	Severity AlertSeverity
+
+	// severity_num
+	SeverityNum *int
+
+	// @timestamp
+	Timestamp time.Time
+}
+
 type RawAlert struct {
 	Meta AlertMetaField
 
@@ -30,11 +63,6 @@ func NewRawAlert(param RawAlertParam) *RawAlert {
 	}
 
 	return &alert
-}
-
-func (alert *RawAlert) WithSeverityNum(severityNum int) *RawAlert {
-	alert.Meta.SeverityNum = &severityNum
-	return alert
 }
 
 // ToCEF converts the alert to CEF format

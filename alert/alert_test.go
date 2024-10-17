@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/alert"
+	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/helper"
 )
 
 var testRawAlert = alert.NewRawAlert(alert.RawAlertParam{
@@ -15,6 +16,7 @@ var testRawAlert = alert.NewRawAlert(alert.RawAlertParam{
 		Description:  "Test Alert Description",
 		Severity:     alert.AlertSeverityLow,
 		Timestamp:    time.Unix(1729045128, 576000000).UTC(),
+		SeverityNum:  helper.Int(10),
 	},
 	GeneralFields: map[string]string{
 		"src":             "192.168.1.1",
@@ -30,7 +32,7 @@ var testRawAlert = alert.NewRawAlert(alert.RawAlertParam{
 		"xxx":             "x-value",
 		"yyy":             "y-value",
 	},
-}).WithSeverityNum(10)
+})
 
 func TestRawAlert_ToCef(t *testing.T) {
 	var testAlert alert.Alert = testRawAlert
