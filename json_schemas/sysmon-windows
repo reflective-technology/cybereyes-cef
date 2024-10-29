@@ -100,6 +100,9 @@
     },
     "user": {
       "type": "string"
+    },
+    "event_id": {
+      "type": "string"
     }
   },
   "required": []
