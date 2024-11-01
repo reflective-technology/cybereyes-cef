@@ -36,6 +36,9 @@ type SysmonWindows struct {
 	// DateYear corresponds to the JSON schema field "date_year".
 	DateYear *string `json:"date_year,omitempty" yaml:"date_year,omitempty" mapstructure:"date_year,omitempty"`
 
+	// EventId corresponds to the JSON schema field "event_id".
+	EventId *string `json:"event_id,omitempty" yaml:"event_id,omitempty" mapstructure:"event_id,omitempty"`
+
 	// FileName corresponds to the JSON schema field "file_name".
 	FileName *string `json:"file_name,omitempty" yaml:"file_name,omitempty" mapstructure:"file_name,omitempty"`
 
