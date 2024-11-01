@@ -111,6 +111,12 @@ func EnhanceExtensionsFromSysmonWindowsFields(fields types.SysmonWindows, vendor
 				extension[transformedKey] = *fields.DateYear
 			}
 		}
+		if fields.EventId != nil {
+			transformedKey, err := UserDefinedFieldName("event_id", vendorAbbreviation)
+			if err == nil {
+				extension[transformedKey] = *fields.EventId
+			}
+		}
 		if fields.FileName != nil {
 			transformedKey, err := UserDefinedFieldName("file_name", vendorAbbreviation)
 			if err == nil {
