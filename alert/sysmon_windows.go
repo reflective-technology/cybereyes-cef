@@ -69,6 +69,12 @@ func EnhanceExtensionsFromSysmonWindowsFields(fields types.SysmonWindows, vendor
 				extension[transformedKey] = *fields.Index
 			}
 		}
+		if fields.Attack != nil {
+			transformedKey, err := UserDefinedFieldName("attack", vendorAbbreviation)
+			if err == nil {
+				extension[transformedKey] = *fields.Attack
+			}
+		}
 		if fields.Cmdline != nil {
 			transformedKey, err := UserDefinedFieldName("cmdline", vendorAbbreviation)
 			if err == nil {
@@ -109,6 +115,18 @@ func EnhanceExtensionsFromSysmonWindowsFields(fields types.SysmonWindows, vendor
 			transformedKey, err := UserDefinedFieldName("date_year", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.DateYear
+			}
+		}
+		if fields.Desc != nil {
+			transformedKey, err := UserDefinedFieldName("desc", vendorAbbreviation)
+			if err == nil {
+				extension[transformedKey] = *fields.Desc
+			}
+		}
+		if fields.Ds != nil {
+			transformedKey, err := UserDefinedFieldName("ds", vendorAbbreviation)
+			if err == nil {
+				extension[transformedKey] = *fields.Ds
 			}
 		}
 		if fields.EventId != nil {
@@ -165,6 +183,12 @@ func EnhanceExtensionsFromSysmonWindowsFields(fields types.SysmonWindows, vendor
 				extension[transformedKey] = *fields.HostName
 			}
 		}
+		if fields.Level != nil {
+			transformedKey, err := UserDefinedFieldName("level", vendorAbbreviation)
+			if err == nil {
+				extension[transformedKey] = *fields.Level
+			}
+		}
 		if fields.OriginalFileName != nil {
 			transformedKey, err := UserDefinedFieldName("original_file_name", vendorAbbreviation)
 			if err == nil {
@@ -211,6 +235,18 @@ func EnhanceExtensionsFromSysmonWindowsFields(fields types.SysmonWindows, vendor
 			transformedKey, err := UserDefinedFieldName("rule_name", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.RuleName
+			}
+		}
+		if fields.Tactic != nil {
+			transformedKey, err := UserDefinedFieldName("tactic", vendorAbbreviation)
+			if err == nil {
+				extension[transformedKey] = *fields.Tactic
+			}
+		}
+		if fields.Technique != nil {
+			transformedKey, err := UserDefinedFieldName("technique", vendorAbbreviation)
+			if err == nil {
+				extension[transformedKey] = *fields.Technique
 			}
 		}
 

@@ -103,6 +103,24 @@
     },
     "event_id": {
       "type": "string"
+    },
+    "attack": {
+      "type": "string"
+    },
+    "tactic": {
+      "type": "string"
+    },
+    "technique": {
+      "type": "string"
+    },
+    "desc": {
+      "type": "string"
+    },
+    "ds": {
+      "type": "string"
+    },
+    "level": {
+      "type": "string"
     }
   },
   "required": []
