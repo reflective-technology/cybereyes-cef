@@ -15,6 +15,9 @@ type SysmonWindows struct {
 	// Index corresponds to the JSON schema field "_index".
 	Index *string `json:"_index,omitempty" yaml:"_index,omitempty" mapstructure:"_index,omitempty"`
 
+	// Attack corresponds to the JSON schema field "attack".
+	Attack *string `json:"attack,omitempty" yaml:"attack,omitempty" mapstructure:"attack,omitempty"`
+
 	// Cmdline corresponds to the JSON schema field "cmdline".
 	Cmdline *string `json:"cmdline,omitempty" yaml:"cmdline,omitempty" mapstructure:"cmdline,omitempty"`
 
@@ -35,6 +38,12 @@ type SysmonWindows struct {
 
 	// DateYear corresponds to the JSON schema field "date_year".
 	DateYear *string `json:"date_year,omitempty" yaml:"date_year,omitempty" mapstructure:"date_year,omitempty"`
+
+	// Desc corresponds to the JSON schema field "desc".
+	Desc *string `json:"desc,omitempty" yaml:"desc,omitempty" mapstructure:"desc,omitempty"`
+
+	// Ds corresponds to the JSON schema field "ds".
+	Ds *string `json:"ds,omitempty" yaml:"ds,omitempty" mapstructure:"ds,omitempty"`
 
 	// EventId corresponds to the JSON schema field "event_id".
 	EventId *string `json:"event_id,omitempty" yaml:"event_id,omitempty" mapstructure:"event_id,omitempty"`
@@ -62,6 +71,9 @@ type SysmonWindows struct {
 
 	// HostName corresponds to the JSON schema field "host_name".
 	HostName *string `json:"host_name,omitempty" yaml:"host_name,omitempty" mapstructure:"host_name,omitempty"`
+
+	// Level corresponds to the JSON schema field "level".
+	Level *string `json:"level,omitempty" yaml:"level,omitempty" mapstructure:"level,omitempty"`
 
 	// OriginalFileName corresponds to the JSON schema field "original_file_name".
 	OriginalFileName *string `json:"original_file_name,omitempty" yaml:"original_file_name,omitempty" mapstructure:"original_file_name,omitempty"`
@@ -97,8 +109,14 @@ type SysmonWindows struct {
 	// RuleName corresponds to the JSON schema field "rule_name".
 	RuleName *string `json:"rule_name,omitempty" yaml:"rule_name,omitempty" mapstructure:"rule_name,omitempty"`
 
+	// Tactic corresponds to the JSON schema field "tactic".
+	Tactic *string `json:"tactic,omitempty" yaml:"tactic,omitempty" mapstructure:"tactic,omitempty"`
+
 	// Tags corresponds to the JSON schema field "tags".
 	Tags []string `json:"tags,omitempty" yaml:"tags,omitempty" mapstructure:"tags,omitempty"`
+
+	// Technique corresponds to the JSON schema field "technique".
+	Technique *string `json:"technique,omitempty" yaml:"technique,omitempty" mapstructure:"technique,omitempty"`
 
 	// User corresponds to the JSON schema field "user".
 	User *string `json:"user,omitempty" yaml:"user,omitempty" mapstructure:"user,omitempty"`
