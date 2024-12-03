@@ -205,6 +205,12 @@ func EnhanceExtensionsFromWebFields(fields types.Web, vendorAbbreviation string)
 				extension[transformedKey] = *fields.HostName
 			}
 		}
+		if fields.HttpAccept != nil {
+			transformedKey, err := UserDefinedFieldName("http_accept", vendorAbbreviation)
+			if err == nil {
+				extension[transformedKey] = *fields.HttpAccept
+			}
+		}
 		if fields.HttpReferrerDomain != nil {
 			transformedKey, err := UserDefinedFieldName("http_referrer_domain", vendorAbbreviation)
 			if err == nil {
@@ -263,6 +269,30 @@ func EnhanceExtensionsFromWebFields(fields types.Web, vendorAbbreviation string)
 			transformedKey, err := UserDefinedFieldName("realip_country", vendorAbbreviation)
 			if err == nil {
 				extension[transformedKey] = *fields.RealipCountry
+			}
+		}
+		if fields.RequestConnection != nil {
+			transformedKey, err := UserDefinedFieldName("request_connection", vendorAbbreviation)
+			if err == nil {
+				extension[transformedKey] = *fields.RequestConnection
+			}
+		}
+		if fields.RequestContentLength != nil {
+			transformedKey, err := UserDefinedFieldName("request_content_length", vendorAbbreviation)
+			if err == nil {
+				extension[transformedKey] = *fields.RequestContentLength
+			}
+		}
+		if fields.RequestContentType != nil {
+			transformedKey, err := UserDefinedFieldName("request_content_type", vendorAbbreviation)
+			if err == nil {
+				extension[transformedKey] = *fields.RequestContentType
+			}
+		}
+		if fields.ResponseContentType != nil {
+			transformedKey, err := UserDefinedFieldName("response_content_type", vendorAbbreviation)
+			if err == nil {
+				extension[transformedKey] = *fields.ResponseContentType
 			}
 		}
 		if fields.SendContentType != nil {

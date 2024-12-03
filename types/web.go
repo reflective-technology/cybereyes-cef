@@ -81,6 +81,9 @@ type Web struct {
 	// HostName corresponds to the JSON schema field "host_name".
 	HostName *string `json:"host_name,omitempty" yaml:"host_name,omitempty" mapstructure:"host_name,omitempty"`
 
+	// HttpAccept corresponds to the JSON schema field "http_accept".
+	HttpAccept *string `json:"http_accept,omitempty" yaml:"http_accept,omitempty" mapstructure:"http_accept,omitempty"`
+
 	// HttpMethod corresponds to the JSON schema field "http_method".
 	HttpMethod *string `json:"http_method,omitempty" yaml:"http_method,omitempty" mapstructure:"http_method,omitempty"`
 
@@ -119,6 +122,20 @@ type Web struct {
 
 	// RealipCountry corresponds to the JSON schema field "realip_country".
 	RealipCountry *string `json:"realip_country,omitempty" yaml:"realip_country,omitempty" mapstructure:"realip_country,omitempty"`
+
+	// RequestConnection corresponds to the JSON schema field "request_connection".
+	RequestConnection *string `json:"request_connection,omitempty" yaml:"request_connection,omitempty" mapstructure:"request_connection,omitempty"`
+
+	// RequestContentLength corresponds to the JSON schema field
+	// "request_content_length".
+	RequestContentLength *string `json:"request_content_length,omitempty" yaml:"request_content_length,omitempty" mapstructure:"request_content_length,omitempty"`
+
+	// RequestContentType corresponds to the JSON schema field "request_content_type".
+	RequestContentType *string `json:"request_content_type,omitempty" yaml:"request_content_type,omitempty" mapstructure:"request_content_type,omitempty"`
+
+	// ResponseContentType corresponds to the JSON schema field
+	// "response_content_type".
+	ResponseContentType *string `json:"response_content_type,omitempty" yaml:"response_content_type,omitempty" mapstructure:"response_content_type,omitempty"`
 
 	// SendContentType corresponds to the JSON schema field "send_content_type".
 	SendContentType *string `json:"send_content_type,omitempty" yaml:"send_content_type,omitempty" mapstructure:"send_content_type,omitempty"`
