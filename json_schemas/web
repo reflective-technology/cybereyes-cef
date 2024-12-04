@@ -166,6 +166,21 @@
     },
     "x_forward_for": {
       "type": "string"
+    },
+    "request_content_type": {
+      "type": "string"
+    },
+    "response_content_type": {
+      "type": "string"
+    },
+    "request_connection": {
+      "type": "string"
+    },
+    "request_content_length": {
+      "type": "string"
+    },
+    "http_accept": {
+      "type": "string"
     }
   },
   "required": []
