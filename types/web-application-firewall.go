@@ -108,6 +108,9 @@ type WebApplicationFirewall struct {
 	// HttpUserAgent corresponds to the JSON schema field "http_user_agent".
 	HttpUserAgent *string `json:"http_user_agent,omitempty" yaml:"http_user_agent,omitempty" mapstructure:"http_user_agent,omitempty"`
 
+	// MatchedPattern corresponds to the JSON schema field "matched_pattern".
+	MatchedPattern *string `json:"matched_pattern,omitempty" yaml:"matched_pattern,omitempty" mapstructure:"matched_pattern,omitempty"`
+
 	// OriginalSrc corresponds to the JSON schema field "original_src".
 	OriginalSrc *string `json:"original_src,omitempty" yaml:"original_src,omitempty" mapstructure:"original_src,omitempty"`
 

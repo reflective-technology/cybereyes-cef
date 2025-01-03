@@ -238,6 +238,12 @@ func EnhanceExtensionsFromWebApplicationFirewallFields(fields types.WebApplicati
 				extension[transformedKey] = *fields.HttpReferrerDomain
 			}
 		}
+		if fields.MatchedPattern != nil {
+			transformedKey, err := UserDefinedFieldName("matched_pattern", vendorAbbreviation)
+			if err == nil {
+				extension[transformedKey] = *fields.MatchedPattern
+			}
+		}
 		if fields.OriginalSrc != nil {
 			transformedKey, err := UserDefinedFieldName("original_src", vendorAbbreviation)
 			if err == nil {

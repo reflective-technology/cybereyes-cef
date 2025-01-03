@@ -201,6 +201,9 @@
     },
     "http_accept": {
       "type": "string"
+    },
+    "matched_pattern": {
+      "type": "string"
     }
   },
   "required": []
