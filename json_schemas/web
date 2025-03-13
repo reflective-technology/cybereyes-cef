@@ -1,0 +1,187 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "type": "string"
+    },
+    "_index": {
+      "type": "string"
+    },
+    "@timestamp": {
+      "type": "string"
+    },
+    "@version": {
+      "type": "string"
+    },
+    "act": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string"
+    },
+    "body_bytes_out": {
+      "type": "string"
+    },
+    "bytes_in": {
+      "type": "string"
+    },
+    "bytes_out": {
+      "type": "string"
+    },
+    "cookie": {
+      "type": "string"
+    },
+    "date_day": {
+      "type": "string"
+    },
+    "date_hour": {
+      "type": "string"
+    },
+    "date_minute": {
+      "type": "string"
+    },
+    "date_month": {
+      "type": "string"
+    },
+    "date_second": {
+      "type": "string"
+    },
+    "date_year": {
+      "type": "string"
+    },
+    "dest": {
+      "type": "string"
+    },
+    "dest_as_name": {
+      "type": "string"
+    },
+    "dest_asn": {
+      "type": "string"
+    },
+    "dest_country": {
+      "type": "string"
+    },
+    "dest_port": {
+      "type": "string"
+    },
+    "duration": {
+      "type": "string"
+    },
+    "file_extension": {
+      "type": "string"
+    },
+    "fingerprint": {
+      "type": "string"
+    },
+    "host_ip": {
+      "type": "string"
+    },
+    "host_name": {
+      "type": "string"
+    },
+    "http_method": {
+      "type": "string"
+    },
+    "http_referrer": {
+      "type": "string"
+    },
+    "http_referrer_domain": {
+      "type": "string"
+    },
+    "http_user_agent": {
+      "type": "string"
+    },
+    "original_src": {
+      "type": "string"
+    },
+    "original_src_as_name": {
+      "type": "string"
+    },
+    "original_src_asn": {
+      "type": "string"
+    },
+    "original_src_country": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "realip": {
+      "type": "string"
+    },
+    "realip_as_name": {
+      "type": "string"
+    },
+    "realip_asn": {
+      "type": "string"
+    },
+    "realip_country": {
+      "type": "string"
+    },
+    "send_content_type": {
+      "type": "string"
+    },
+    "site": {
+      "type": "string"
+    },
+    "src": {
+      "type": "string"
+    },
+    "src_as_name": {
+      "type": "string"
+    },
+    "src_asn": {
+      "type": "string"
+    },
+    "src_country": {
+      "type": "string"
+    },
+    "src_port": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "uri_path": {
+      "type": "string"
+    },
+    "uri_query": {
+      "type": "string"
+    },
+    "url_domain": {
+      "type": "string"
+    },
+    "user": {
+      "type": "string"
+    },
+    "vendor_product": {
+      "type": "string"
+    },
+    "x_forward_for": {
+      "type": "string"
+    },
+    "request_content_type": {
+      "type": "string"
+    },
+    "response_content_type": {
+      "type": "string"
+    },
+    "request_connection": {
+      "type": "string"
+    },
+    "request_content_length": {
+      "type": "string"
+    },
+    "http_accept": {
+      "type": "string"
+    }
+  },
+  "required": []
+}

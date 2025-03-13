@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "type": "string"
+    },
+    "_index": {
+      "type": "string"
+    },
+    "@timestamp": {
+      "type": "string"
+    },
+    "@version": {
+      "type": "string"
+    },
+    "application_message": {
+      "type": "string"
+    },
+    "date_day": {
+      "type": "string"
+    },
+    "date_hour": {
+      "type": "string"
+    },
+    "date_minute": {
+      "type": "string"
+    },
+    "date_month": {
+      "type": "string"
+    },
+    "date_second": {
+      "type": "string"
+    },
+    "date_year": {
+      "type": "string"
+    },
+    "event_category": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "fingerprint": {
+      "type": "string"
+    },
+    "host_ip": {
+      "type": "string"
+    },
+    "host_name": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "severity": {
+      "type": "string"
+    },
+    "severity_value": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": []
+}

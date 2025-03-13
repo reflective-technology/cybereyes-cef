@@ -1,0 +1,47 @@
+include:
+- project: zuso-rd-team/gitlab-ci-templates
+  file:
+  - base-sec-report.yml
+  - common.yml
+
+unit-test:
+  image: "${DOCKER_REGISTRY}/golang:1.22-alpine3.20"
+  stage: test
+  needs: []
+  dependencies: []
+  extends:
+  - ".normal-not-cron"
+  variables:
+    APK_CACHE_DIR: $CI_PROJECT_DIR/.cache/apk
+    GOPATH: $CI_PROJECT_DIR/.go
+  cache:
+    key: "unit-test"
+    paths:
+      - .go/pkg/mod/
+      - $APK_CACHE_DIR
+  script:
+  - mkdir -p .go
+  - mkdir -p $APK_CACHE_DIR
+  - apk update --cache-dir $APK_CACHE_DIR
+  - apk add --cache-dir $APK_CACHE_DIR build-base
+  - go install gotest.tools/gotestsum@latest
+  - .go/bin/gotestsum --junitfile report.xml --format testname
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
+  tags:
+  - container
+
+lint-test:
+  image: "${DOCKER_REGISTRY}/golangci/golangci-lint:latest-alpine"
+  stage: test
+  needs: []
+  dependencies: []
+  extends:
+  - ".go-cache"
+  - ".normal-not-cron"
+  script:
+  - golangci-lint run --timeout 5m
+  tags:
+  - container
