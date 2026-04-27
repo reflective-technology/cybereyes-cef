@@ -96,13 +96,16 @@ func RunTemplate(data AlertStructData, outputDir string) error {
 		return err
 	}
 
-	file_name := fmt.Sprintf("%s/%s.go", outputDir, strings.ToLower(regexp.MustCompile(`([a-z0-9])([A-Z])`).ReplaceAllString(data.LogTypeName, "${1}_${2}")))
-	file, err := os.Create(file_name)
+	fileName := fmt.Sprintf("%s/%s.go", outputDir, strings.ToLower(regexp.MustCompile(`([a-z0-9])([A-Z])`).ReplaceAllString(data.LogTypeName, "${1}_${2}")))
+	file, err := os.Create(fileName)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
-
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Printf("Error closing file: %v", err)
+		}
+	}()
 	if err := tmpl.ExecuteTemplate(file, "AlertStruct", data); err != nil {
 		return err
 	}
@@ -121,7 +124,11 @@ func RunTestTemplate(data AlertStructData, outputDir string) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Printf("Error closing file: %v", err)
+		}
+	}()
 
 	if err := tmpl.ExecuteTemplate(file, "AlertTest", data); err != nil {
 		return err

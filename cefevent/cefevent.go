@@ -277,11 +277,7 @@ func (event *CefEvent) String() (string, error) {
 
 	// construct the extension string according to the CEF format
 	for _, k := range sortedExtensions {
-		p.WriteString(fmt.Sprintf(
-			"%s=%s ",
-			k,
-			event.extensions[k]),
-		)
+		fmt.Fprintf(&p, "%s=%s ", k, event.extensions[k])
 	}
 
 	// make sure there is not a trailing space for the extension
