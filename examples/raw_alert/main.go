@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/alert"
+	"github.com/reflective-technology/cybereyes-cef/alert"
 )
 
 func main() {

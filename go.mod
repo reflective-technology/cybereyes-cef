@@ -1,4 +1,4 @@
-module gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git
+module github.com/reflective-technology/cybereyes-cef
 
 go 1.22
 

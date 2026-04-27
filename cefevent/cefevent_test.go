@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/cefevent"
+	"github.com/reflective-technology/cybereyes-cef/cefevent"
 )
 
 var defaultParams = cefevent.CefEventParams{
