@@ -11,8 +11,8 @@ import (
 	"log"
 	"text/template"
 
-	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/alert"
-	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/types"
+	"github.com/reflective-technology/cybereyes-cef/alert"
+	"github.com/reflective-technology/cybereyes-cef/types"
 )
 
 //go:embed alert.tmpl

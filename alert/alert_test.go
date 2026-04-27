@@ -4,10 +4,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/reflective-technology/cybereyes-cef/alert"
+	"github.com/reflective-technology/cybereyes-cef/helper"
+	"github.com/reflective-technology/cybereyes-cef/types"
 	"github.com/stretchr/testify/assert"
-	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/alert"
-	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/helper"
-	"gitlab.tp.zuso.arpa/zuso-rd-team/go-pkg/events.git/types"
 )
 
 var testAlertMeta = alert.AlertMetaField{
