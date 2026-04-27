@@ -14,10 +14,4 @@ var (
 		ProductVersion: "3",
 		Abbreviation:   "CE",
 	}
-	VendorArray VendorConfig = VendorConfig{
-		VendorName:     "Array Networks",
-		ProductName:    "Insighter",
-		ProductVersion: "3",
-		Abbreviation:   "INST",
-	}
 )
