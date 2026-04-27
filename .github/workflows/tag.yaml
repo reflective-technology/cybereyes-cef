@@ -12,8 +12,6 @@ jobs:
       contents: read
     outputs:
       version: ${{ steps.get_version.outputs.version }}
-    permissions:
-      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
