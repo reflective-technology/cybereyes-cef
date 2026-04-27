@@ -9,10 +9,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var testWebAlert = alert.WebAlert{
+var testWebApplicationFirewallAlert = alert.WebApplicationFirewallAlert{
 	AlertMetaField: testAlertMeta,
-	WebFields: types.Web{
+	WebApplicationFirewallFields: types.WebApplicationFirewall{
 		Action:               new("test-value"),
+		App:                  new("test-value"),
 		BytesIn:              new("test-value"),
 		BytesOut:             new("test-value"),
 		Cookie:               new("test-value"),
@@ -30,8 +31,8 @@ var testWebAlert = alert.WebAlert{
 		Version:              new("test-value"),
 		Id:                   new("test-value"),
 		Index:                new("test-value"),
-		Act:                  new("test-value"),
 		BodyBytesOut:         new("test-value"),
+		Category:             new("test-value"),
 		DateDay:              new("test-value"),
 		DateHour:             new("test-value"),
 		DateMinute:           new("test-value"),
@@ -44,37 +45,45 @@ var testWebAlert = alert.WebAlert{
 		Duration:             new("test-value"),
 		FileExtension:        new("test-value"),
 		Fingerprint:          new("test-value"),
+		FullRequest:          new("test-value"),
+		Host:                 new("test-value"),
 		HostIp:               new("test-value"),
 		HostName:             new("test-value"),
 		HttpAccept:           new("test-value"),
+		HttpClassName:        new("test-value"),
 		HttpReferrerDomain:   new("test-value"),
+		MatchedPattern:       new("test-value"),
 		OriginalSrc:          new("test-value"),
 		OriginalSrcAsName:    new("test-value"),
 		OriginalSrcAsn:       new("test-value"),
 		OriginalSrcCountry:   new("test-value"),
+		PolicyName:           new("test-value"),
 		ProjectId:            new("test-value"),
 		Realip:               new("test-value"),
 		RealipAsName:         new("test-value"),
 		RealipAsn:            new("test-value"),
 		RealipCountry:        new("test-value"),
+		Referer:              new("test-value"),
 		RequestConnection:    new("test-value"),
 		RequestContentLength: new("test-value"),
 		RequestContentType:   new("test-value"),
 		ResponseContentType:  new("test-value"),
 		SendContentType:      new("test-value"),
+		Severity:             new("test-value"),
+		Signature:            new("test-value"),
 		Site:                 new("test-value"),
 		SrcAsName:            new("test-value"),
 		SrcAsn:               new("test-value"),
 		SrcCountry:           new("test-value"),
-		VendorProduct:        new("test-value"),
+		UserAgent:            new("test-value"),
 		XForwardFor:          new("test-value"),
 		Status:               new("200"),
 		UriQuery:             new("param=value"),
 	},
 }
 
-func TestWebAlert_ToCef(t *testing.T) {
-	cef, err := testWebAlert.ToCef(alert.ToCefParam{
+func TestWebApplicationFirewallAlert_ToCef(t *testing.T) {
+	cef, err := testWebApplicationFirewallAlert.ToCef(alert.ToCefParam{
 		VendorConfig: alert.VendorReflective,
 		Hostname:     "example.com",
 	})

@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/reflective-technology/cybereyes-cef/alert"
-	"github.com/reflective-technology/cybereyes-cef/helper"
 	"github.com/reflective-technology/cybereyes-cef/types"
 )
 
@@ -20,20 +19,20 @@ func main() {
 			Severity:     alert.AlertSeverityCritical,
 		},
 		WebFields: types.Web{
-			Src:           helper.String("192.168.1.1"),
-			SrcPort:       helper.String("35098"),
-			Dest:          helper.String("192.168.1.2"),
-			DestPort:      helper.String("80"),
-			HttpMethod:    helper.String("POST"),
-			HttpUserAgent: helper.String("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"),
-			Status:        helper.String("200"),
-			HttpReferrer:  helper.String("http://example.com"),
-			UriQuery:      helper.String("param1=value1&param2=value2"),
-			UriPath:       helper.String("/path/to/resource"),
-			BytesIn:       helper.String("4096"),
-			BytesOut:      helper.String("8192"),
-			Cookie:        helper.String("testcookie=testvalue"),
-			Fingerprint:   helper.String("098f6bcd4621d373cade4e832627b4f6"),
+			Src:           new("192.168.1.1"),
+			SrcPort:       new("35098"),
+			Dest:          new("192.168.1.2"),
+			DestPort:      new("80"),
+			HttpMethod:    new("POST"),
+			HttpUserAgent: new("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"),
+			Status:        new("200"),
+			HttpReferrer:  new("http://example.com"),
+			UriQuery:      new("param1=value1&param2=value2"),
+			UriPath:       new("/path/to/resource"),
+			BytesIn:       new("4096"),
+			BytesOut:      new("8192"),
+			Cookie:        new("testcookie=testvalue"),
+			Fingerprint:   new("098f6bcd4621d373cade4e832627b4f6"),
 		},
 	}
 

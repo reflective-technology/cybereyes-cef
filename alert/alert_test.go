@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/reflective-technology/cybereyes-cef/alert"
-	"github.com/reflective-technology/cybereyes-cef/helper"
 	"github.com/reflective-technology/cybereyes-cef/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -18,7 +17,7 @@ var testAlertMeta = alert.AlertMetaField{
 	Description:  "Test Alert Description",
 	Severity:     alert.AlertSeverityLow,
 	Timestamp:    time.Unix(1729045128, 576000000).UTC(),
-	SeverityNum:  helper.Int(10),
+	SeverityNum:  new(10),
 }
 
 var testRawAlert = alert.NewRawAlert(alert.RawAlertParam{
@@ -72,18 +71,18 @@ func TestGeneratedAlertType_ToCef(t *testing.T) {
 	var testAlert alert.Alert = &alert.WebAlert{
 		AlertMetaField: testAlertMeta,
 		WebFields: types.Web{
-			Src:           helper.String("192.168.1.1"),
-			Dest:          helper.String("192.168.1.2"),
-			DestPort:      helper.String("443"),
-			Status:        helper.String("200"),
-			HttpMethod:    helper.String("GET"),
-			HttpUserAgent: helper.String("Mozilla/5.0"),
-			HttpReferrer:  helper.String("http://example.com"),
-			UriQuery:      helper.String("param1=value1&param2=value2"),
-			UriPath:       helper.String("/path/to/resource"),
-			BytesIn:       helper.String("4096"),
-			BytesOut:      helper.String("8192"),
-			Cookie:        helper.String("testcookie=testvalue"),
+			Src:           new("192.168.1.1"),
+			Dest:          new("192.168.1.2"),
+			DestPort:      new("443"),
+			Status:        new("200"),
+			HttpMethod:    new("GET"),
+			HttpUserAgent: new("Mozilla/5.0"),
+			HttpReferrer:  new("http://example.com"),
+			UriQuery:      new("param1=value1&param2=value2"),
+			UriPath:       new("/path/to/resource"),
+			BytesIn:       new("4096"),
+			BytesOut:      new("8192"),
+			Cookie:        new("testcookie=testvalue"),
 		},
 	}
 
