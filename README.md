@@ -1,10 +1,81 @@
-# Events
+# cybereyes-cef
 
-This repository contains a collection of event types ,and all the events implemente a method that can convert to a CEF formatted string.
+A Go library for constructing [Common Event Format (CEF)](https://www.microfocus.com/documentation/arcsight/arcsight-smartconnectors-8.4/pdfdoc/cef-implementation-standard/cef-implementation-standard.pdf) messages from security alert events. It supports both raw (freeform key-value) alerts and strongly-typed alerts generated from JSON Schemas, and can emit Syslog RFC 3164 messages with CEF payloads.
+
+## Packages
+
+| Package | Description |
+|---|---|
+| `cefevent` | Low-level CEF event builder, parser, and logger |
+| `alert` | High-level alert types (typed and raw) with CEF/Syslog output |
+| `types` | Typed event field structs generated from JSON Schemas |
+
+## Supported Event Types
+
+- `AuditdLinux`
+- `Firewall`
+- `IPS`
+- `SysmonWindows`
+- `Web`
+- `WebApplicationFirewall`
+- `WindowsEventsApplication`
+- `WindowsEventsSecurity`
+
+## Installation
+
+```bash
+go get github.com/reflective-technology/cybereyes-cef
+```
 
 ## Usage
 
-To use the events in your project, you can install the package and then import the package into your project.
+### Low-level CEF event
+
+Build and print a CEF message directly using the `cefevent` package:
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/reflective-technology/cybereyes-cef/cefevent"
+)
+
+func main() {
+	event := cefevent.NewCefEvent(cefevent.CefEventParams{
+		Version:            cefevent.CefVersion0,
+		DeviceVendor:       "Cool Vendor",
+		DeviceProduct:      "Cool Product",
+		DeviceVersion:      "1.0",
+		DeviceEventClassId: "FLAKY_EVENT",
+		Name:               "Something flaky happened.",
+		Severity:           "3",
+		Extensions: map[string]string{
+			"src":                      "127.0.0.1",
+			"requestClientApplication": "Go-http-client/1.1",
+		},
+	})
+
+	s, err := event.String()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(s)
+	// CEF:0|Cool Vendor|Cool Product|1.0|FLAKY_EVENT|Something flaky happened.|3|requestClientApplication=Go-http-client/1.1 src=127.0.0.1
+
+	// parse a CEF line back into a CefEvent
+	line := "CEF:0|Cool Vendor|Cool Product|1.0|COOL_THING|Something cool happened.|Unknown|src=127.0.0.1"
+	parsed := cefevent.CefEvent{}
+	if _, err := parsed.Read(line); err != nil {
+		panic(err)
+	}
+}
+```
+
+### Typed alert (strongly-typed fields)
+
+Use a generated alert struct (e.g. `WebAlert`) for compile-time field safety:
 
 ```go
 package main
@@ -14,12 +85,12 @@ import (
 	"time"
 
 	"github.com/reflective-technology/cybereyes-cef/alert"
-	"github.com/reflective-technology/cybereyes-cef/helper"
 	"github.com/reflective-technology/cybereyes-cef/types"
 )
 
-func main() {
+func ptr(s string) *string { return &s }
 
+func main() {
 	webAlert := alert.WebAlert{
 		AlertMetaField: alert.AlertMetaField{
 			ID:           "a1b2c3d4-e5f6-7890-abcd-1234567890ab",
@@ -30,20 +101,20 @@ func main() {
 			Severity:     alert.AlertSeverityCritical,
 		},
 		WebFields: types.Web{
-			Src:           helper.String("192.168.1.1"),
-			SrcPort:       helper.String("35098"),
-			Dest:          helper.String("192.168.1.2"),
-			DestPort:      helper.String("80"),
-			HttpMethod:    helper.String("POST"),
-			HttpUserAgent: helper.String("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"),
-			Status:        helper.String("200"),
-			HttpReferrer:  helper.String("http://example.com"),
-			UriQuery:      helper.String("param1=value1&param2=value2"),
-			UriPath:       helper.String("/path/to/resource"),
-			BytesIn:       helper.String("4096"),
-			BytesOut:      helper.String("8192"),
-			Cookie:        helper.String("testcookie=testvalue"),
-			Fingerprint:   helper.String("098f6bcd4621d373cade4e832627b4f6"),
+			Src:           ptr("192.168.1.1"),
+			SrcPort:       ptr("35098"),
+			Dest:          ptr("192.168.1.2"),
+			DestPort:      ptr("80"),
+			HttpMethod:    ptr("POST"),
+			HttpUserAgent: ptr("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"),
+			Status:        ptr("200"),
+			HttpReferrer:  ptr("http://example.com"),
+			UriQuery:      ptr("param1=value1&param2=value2"),
+			UriPath:       ptr("/path/to/resource"),
+			BytesIn:       ptr("4096"),
+			BytesOut:      ptr("8192"),
+			Cookie:        ptr("testcookie=testvalue"),
+			Fingerprint:   ptr("098f6bcd4621d373cade4e832627b4f6"),
 		},
 	}
 
@@ -57,28 +128,77 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(syslog) // <112>Oct 17 20:21:46 web-security-01.zuso.arpa CyberEyes: CEF:0|Reflective|CyberEyes|3|RULE-12345|Suspicious Network Activity Detected|10|dpt=80 dst=192.168.1.2 dvchost=web-security-01.zuso.arpa eventId=a1b2c3d4-e5f6-7890-abcd-1234567890ab in=4096 out=8192 request=/path/to/resource requestClientApplication=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 requestContext=http://example.com requestCookies=testcookie\=testvalue requestMethod=POST rt=-62135596800000 spt=35098 src=192.168.1.1 cs1=Suspicious Network Activity Detected cs1Label=alertname cs2=critical cs2Label=severity cs3=Potential Data Exfiltration Attempt cs3Label=summary cs4=Multiple large outbound data transfers detected from internal IP to unknown external destination. cs4Label=description cs5=200 cs5Label=status cs6=param1\=value1&param2\=value2 cs6Label=uri_query CEFingerprint=098f6bcd4621d373cade4e832627b4f6
+	fmt.Println(syslog)
+	// <112>Apr 27 00:00:00 web-security-01.zuso.arpa CyberEyes: CEF:0|Reflective|CyberEyes|3|RULE-12345|Suspicious Network Activity Detected|10|...
 }
-
 ```
 
+### Raw alert (freeform key-value fields)
 
+Use `RawAlert` when field names are only known at runtime:
 
-## Add new event type
+```go
+package main
 
+import (
+	"fmt"
+	"time"
 
-To add new event type, you need to add the json schema to the `json_schemas` directory.
+	"github.com/reflective-technology/cybereyes-cef/alert"
+)
 
-After that, you need to run the following command to generate the event type.
+func main() {
+	rawAlert := alert.NewRawAlert(alert.RawAlertParam{
+		Meta: alert.AlertMetaField{
+			ID:           "a1b2c3d4-e5f6-7890-abcd-1234567890ab",
+			RuleID:       "RULE-12345",
+			Name:         "Suspicious Network Activity Detected",
+			AlertSubject: "Potential Data Exfiltration Attempt",
+			Description:  "Multiple large outbound data transfers detected from internal IP to unknown external destination.",
+			Severity:     alert.AlertSeverityLow,
+		},
+		GeneralFields: map[string]string{
+			"src":           "192.168.1.1",
+			"dest":          "192.168.1.2",
+			"src_port":      "80",
+			"dest_port":     "8080",
+			"http_method":   "GET",
+			"http_referrer": "http://example.com",
+			"url_domain":    "example.com",
+			"user":          "testuser",
+		},
+	})
 
-```bash
-make codegen
+	syslog, err := rawAlert.ToSyslogRFC3164WithCef(alert.ToSyslogRFC3164WithCefParam{
+		VendorConfig: alert.VendorReflective,
+		Hostname:     "test-machine",
+		Timestamp:    time.Now().UTC(),
+		Priority:     14*8 + 6,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(syslog)
+}
 ```
 
-and to generate the corresponding alert type, you need to add the event type to the list in `alert/codegen/main.go`
+## Severity Levels
 
-like this:
-```
+| Constant | Value |
+|---|---|
+| `AlertSeverityInfo` | `"info"` |
+| `AlertSeverityLow` | `"low"` |
+| `AlertSeverityMedium` | `"medium"` |
+| `AlertSeverityHigh` | `"high"` |
+| `AlertSeverityCritical` | `"critical"` |
+
+## Adding a New Event Type
+
+1. Add a JSON Schema file to the `json_schemas/` directory (e.g. `json_schemas/my-event`).
+2. Add the new type to the `alertTypes` slice in `alert/codegen/main.go`:
+
+```go
 var alertTypes = []any{
 	types.AuditdLinux{},
 	types.Firewall{},
@@ -88,7 +208,18 @@ var alertTypes = []any{
 	types.Web{},
 	types.WindowsEventsApplication{},
 	types.WindowsEventsSecurity{},
+	types.MyEvent{}, // new type
 }
 ```
 
-and run `make codegen` again.
+3. Run code generation:
+
+```bash
+make codegen
+```
+
+This installs `go-jsonschema`, regenerates structs under `types/`, and runs `go generate ./...` to produce the corresponding `alert/` types.
+
+## License
+
+See [LICENSE.md](LICENSE.md).
