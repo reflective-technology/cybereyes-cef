@@ -18,6 +18,9 @@ import (
 //go:embed alert.tmpl
 var alertTemplate string
 
+//go:embed test.tmpl
+var testTemplate string
+
 var alertTypes = []any{
 	types.AuditdLinux{},
 	types.Firewall{},
@@ -107,6 +110,26 @@ func RunTemplate(data AlertStructData, outputDir string) error {
 	return nil
 }
 
+func RunTestTemplate(data AlertStructData, outputDir string) error {
+	tmpl, err := template.New("test.tmpl").Parse(testTemplate)
+	if err != nil {
+		return err
+	}
+
+	fileName := fmt.Sprintf("%s/%s_test.go", outputDir, strings.ToLower(regexp.MustCompile(`([a-z0-9])([A-Z])`).ReplaceAllString(data.LogTypeName, "${1}_${2}")))
+	file, err := os.Create(fileName)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	if err := tmpl.ExecuteTemplate(file, "AlertTest", data); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func main() {
 	const outputDir = "."
 
@@ -151,6 +174,10 @@ func main() {
 
 		if err := RunTemplate(data, outputDir); err != nil {
 			log.Fatalf("Error running template: %v", err)
+		}
+
+		if err := RunTestTemplate(data, outputDir); err != nil {
+			log.Fatalf("Error running test template: %v", err)
 		}
 	}
 }
