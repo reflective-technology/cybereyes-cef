@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/go-openapi/testify/v2/assert"
 	"github.com/reflective-technology/cybereyes-cef/v3/alert"
 	"github.com/reflective-technology/cybereyes-cef/v3/types"
-	"github.com/stretchr/testify/assert"
 )
 
 var testAlertMeta = alert.AlertMetaField{
