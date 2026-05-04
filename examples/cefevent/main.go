@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/reflective-technology/cybereyes-cef/cefevent"
+	"github.com/reflective-technology/cybereyes-cef/v3/cefevent"
 )
 
 func main() {

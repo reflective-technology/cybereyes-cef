@@ -24,7 +24,7 @@ A Go library for constructing [Common Event Format (CEF)](https://www.microfocus
 ## Installation
 
 ```bash
-go get github.com/reflective-technology/cybereyes-cef
+go get github.com/reflective-technology/cybereyes-cef/v3
 ```
 
 ## Usage
@@ -39,7 +39,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/reflective-technology/cybereyes-cef/cefevent"
+	"github.com/reflective-technology/cybereyes-cef/v3/cefevent"
 )
 
 func main() {
@@ -84,8 +84,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/reflective-technology/cybereyes-cef/alert"
-	"github.com/reflective-technology/cybereyes-cef/types"
+	"github.com/reflective-technology/cybereyes-cef/v3/alert"
+	"github.com/reflective-technology/cybereyes-cef/v3/types"
 )
 
 func ptr(s string) *string { return &s }
@@ -144,7 +144,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/reflective-technology/cybereyes-cef/alert"
+	"github.com/reflective-technology/cybereyes-cef/v3/alert"
 )
 
 func main() {

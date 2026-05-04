@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/reflective-technology/cybereyes-cef/alert"
-	"github.com/reflective-technology/cybereyes-cef/types"
+	"github.com/reflective-technology/cybereyes-cef/v3/alert"
+	"github.com/reflective-technology/cybereyes-cef/v3/types"
 	"github.com/stretchr/testify/assert"
 )
 

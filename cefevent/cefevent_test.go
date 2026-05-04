@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/reflective-technology/cybereyes-cef/cefevent"
+	"github.com/reflective-technology/cybereyes-cef/v3/cefevent"
 )
 
 var defaultParams = cefevent.CefEventParams{

@@ -1,4 +1,4 @@
-module github.com/reflective-technology/cybereyes-cef
+module github.com/reflective-technology/cybereyes-cef/v3
 
 go 1.26
 
