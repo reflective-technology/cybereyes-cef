@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/reflective-technology/cybereyes-cef/cefevent"
+	"github.com/reflective-technology/cybereyes-cef/v3/cefevent"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/reflective-technology/cybereyes-cef/alert"
-	"github.com/reflective-technology/cybereyes-cef/types"
+	"github.com/reflective-technology/cybereyes-cef/v3/alert"
+	"github.com/reflective-technology/cybereyes-cef/v3/types"
 )
 
 func main() {
