@@ -4,5 +4,5 @@ go 1.26
 
 require (
 	github.com/go-openapi/testify/v2 v2.5.1
-	golang.org/x/text v0.37.0
+	golang.org/x/text v0.38.0
 )
