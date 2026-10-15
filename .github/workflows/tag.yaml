@@ -40,11 +40,11 @@ jobs:
         id: generate-token
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510
         with:
-          client-id: ${{ vars.APP_ID }}
+          client-id: ${{ vars.TAG_GITHUB_CLIENT_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: Push tag
         id: tag_version
-        uses: mathieudutour/github-tag-action@af99e60ce8132224b8e6ebab5023449fe256ed46
+        uses: reflective-technology/github-tag-action@d86631af8dd0eea19a0c631fb26129f831addfa1
         with:
           github_token: ${{ steps.generate-token.outputs.token }}
           tag_prefix: "v"
